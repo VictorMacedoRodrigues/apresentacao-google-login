@@ -1,36 +1,523 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="strict-origin-when-cross-origin"><title>Login com Google • Apresentação e demonstração</title>
-<style>
-:root{color-scheme:dark;--bg:#07121f;--card:#13283b;--line:#28465b;--accent:#65e8ca;--txt:#f3f8fc;--muted:#b1c5d2}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% 0%,#194257 0,transparent 43%),var(--bg);font:16px/1.5 system-ui,Segoe UI,Arial;color:var(--txt);min-height:100dvh}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #ffe2a3;outline-offset:3px}.shell{min-height:100dvh;display:flex;flex-direction:column}.top{border-bottom:1px solid var(--line);padding:13px clamp(18px,4vw,52px);display:flex;justify-content:space-between;align-items:center;gap:15px}.logo{font-weight:900;letter-spacing:.04em}.logo span{color:var(--accent)}.tag{font-size:12px;color:var(--muted)}main{width:min(1180px,100%);margin:auto;padding:34px clamp(18px,5vw,65px);flex:1;display:flex;align-items:center}.slide{width:100%;display:none;animation:rise .4s ease}.slide.active{display:block}@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}.eyebrow{font-size:13px;font-weight:800;letter-spacing:.17em;color:var(--accent);text-transform:uppercase}h1{font-size:clamp(42px,6vw,76px);line-height:1.06;letter-spacing:-.05em;margin:18px 0}h2{font-size:clamp(32px,4.6vw,56px);line-height:1.13;letter-spacing:-.04em;margin:14px 0 18px}h3{margin:0 0 9px;font-size:21px}.lead{font-size:clamp(18px,2vw,24px);color:#c4d7e3;max-width:920px}.accent{color:var(--accent)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:27px}.card{background:linear-gradient(145deg,#16344b,#102336);border:1px solid var(--line);border-radius:18px;padding:25px}.card p{margin:0;color:#c1d5e0}.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}.flow .card{position:relative}.num{display:inline-grid;place-items:center;background:#235550;color:#aaf7df;border-radius:9px;width:36px;height:36px;margin-bottom:14px;font-weight:900}.code{background:#07131f;border:1px solid #31536a;border-radius:12px;padding:18px;font:clamp(12px,1.4vw,17px)/1.65 Consolas,monospace;color:#b0f3dd;white-space:pre-wrap;overflow-wrap:anywhere}.demo{display:grid;grid-template-columns:minmax(280px,1fr) minmax(300px,1.1fr);gap:18px;margin-top:18px}.input{display:block;width:100%;border:1px solid #456275;border-radius:9px;background:#071929;color:white;padding:12px;margin:9px 0}.mini{font-size:13px;color:var(--muted)}.btn{border:1px solid #396274;background:#1d3a4e;color:white;border-radius:10px;padding:10px 16px;font-weight:750}.btn.primary{background:var(--accent);color:#08272d;border-color:var(--accent)}.btn:disabled{opacity:.4;cursor:not-allowed}.status{font-size:14px;color:#d7e5ee;min-height:32px;margin-top:12px}.signinbox{background:white;border-radius:12px;padding:15px;min-height:74px;display:flex;align-items:center;justify-content:center}.profile{display:none;align-items:center;gap:16px;margin-top:18px}.profile.show{display:flex}.avatar{width:64px;height:64px;border-radius:50%;object-fit:cover;background:#3a5569}.profile-name{font-size:22px;font-weight:850;overflow-wrap:anywhere}.profile-email{font-size:14px;color:var(--muted);overflow-wrap:anywhere}.inline-link{color:var(--accent)}.footer{border-top:1px solid var(--line);padding:14px clamp(18px,4vw,52px);display:flex;justify-content:space-between;gap:12px;align-items:center}.progress{height:4px;background:#1c3446}.progress>div{height:100%;background:var(--accent);transition:width .3s}.nav{display:flex;gap:9px}.warning{border-left:3px solid #edc17e;background:#2a2b30;border-radius:8px;padding:11px 15px;font-size:14px;color:#f0dbba;margin-top:20px}.good{border-left:3px solid var(--accent);background:#14343c;padding:12px 15px;border-radius:8px;margin-top:18px}.smaller{font-size:13px;color:var(--muted)}@media(max-width:750px){.grid,.flow,.demo{grid-template-columns:1fr}.top .tag{display:none}main{align-items:flex-start;padding-top:24px}.footer{position:sticky;bottom:0;background:#07121f}h1{font-size:43px}.card{padding:18px}}@media print{body{background:white;color:black}.top,.footer,.progress{display:none}.slide{display:block!important;break-after:page;height:92vh;padding:50px}.card{background:#eee;color:black}.card p,.lead{color:#222}}
-</style></head><body><div class="shell"><header class="top"><div class="logo">GOOGLE <span>/ LOGIN API</span></div><div class="tag">Trabalho acadêmico • Login real • Uma página HTML</div><button id="full" class="btn">⛶ Tela cheia</button></header><main>
-<section class="slide active"><div class="eyebrow">01 / Introdução</div><h1>Entrar com Google:<br><span class="accent">uma API em ação.</span></h1><p class="lead">Como um sistema utiliza a identidade da conta Google para oferecer uma experiência de login prática.</p><div class="grid"><div class="card"><h3>O objetivo</h3><p>Entender a comunicação entre o site e o Google na autenticação.</p></div><div class="card"><h3>A demonstração</h3><p>Fazer login com uma conta Google de verdade e mostrar o perfil retornado.</p></div></div></section>
-<section class="slide"><div class="eyebrow">02 / Conceito</div><h2>O que é a <span class="accent">API de autenticação?</span></h2><p class="lead">Usamos o <strong>Google Identity Services</strong> para pedir ao Google que identifique o usuário, sem que nosso site receba sua senha.</p><div class="grid"><div class="card"><h3>O site</h3><p>Apresenta o botão “Entrar com Google” e recebe uma credencial de identidade.</p></div><div class="card"><h3>O Google</h3><p>Permite escolher a conta, processa o login e retorna um ID token.</p></div></div><div class="good">Autenticação é diferente de acessar a caixa de entrada do Gmail. Este exemplo não lê e-mails.</div></section>
-<section class="slide"><div class="eyebrow">03 / Funcionamento</div><h2>O que acontece quando clicamos em <span class="accent">Entrar com Google?</span></h2><div class="flow"><div class="card"><div class="num">1</div><h3>Solicitação</h3><p>O usuário clica no botão oficial do Google dentro do site.</p></div><div class="card"><div class="num">2</div><h3>Identidade</h3><p>O Google exibe a seleção da conta e entrega um token de identidade ao navegador.</p></div><div class="card"><div class="num">3</div><h3>Resultado</h3><p>A página mostra o nome, o e-mail e a foto informados na credencial.</p></div></div><div class="warning">Em sistemas reais, um servidor precisa validar o ID token antes de conceder acesso a dados protegidos. Aqui é uma demonstração acadêmica só com frontend.</div></section>
-<section class="slide"><div class="eyebrow">04 / Tecnologia</div><h2>Como colocamos a API no nosso <span class="accent">HTML?</span></h2><p class="lead">Carregamos a biblioteca oficial, informamos o Client ID e pedimos para criar o botão de login.</p><div class="code">&lt;script src="https://accounts.google.com/gsi/client" async&gt;&lt;/script&gt;
-
-google.accounts.id.initialize({
-  client_id: "SEU_CLIENT_ID",
-  callback: receberCredencial
-});
-
-google.accounts.id.renderButton(elemento, {theme:"outline",size:"large"});</div><p class="smaller">Client ID identifica o aplicativo perante o Google. Não é a senha do usuário nem um segredo.</p></section>
-<section class="slide" id="demonstracao"><div class="eyebrow">05 / Demonstração ao vivo</div><h2>Vamos fazer <span class="accent">login de verdade!</span></h2><div class="demo"><div class="card"><h3>Preparação</h3><p class="mini">O aplicativo já está conectado ao Client ID configurado no Google Cloud.</p><label for="clientId" class="mini">Client ID OAuth 2.0 (Aplicativo da Web)</label><input class="input" id="clientId" spellcheck="false" placeholder="123456789-xxxx.apps.googleusercontent.com" autocomplete="off"><button class="btn primary" id="configure">Ativar login real</button><div class="status" id="status" role="status" aria-live="polite">Informe o Client ID para ativar o botão.</div><div class="smaller">Origem atual: <strong id="origin"></strong></div></div><div class="card"><h3>Painel do usuário</h3><p class="mini">Use sua própria conta Google. O login só funciona no endereço HTTPS cadastrado no Google Cloud.</p><div class="signinbox" id="signInBox"><div id="googleButton"></div></div><div class="profile" id="profile"><img class="avatar" id="avatar" alt="Foto do perfil"><div><div class="profile-name" id="name"></div><div class="profile-email" id="email"></div><div class="mini">Informações extraídas da credencial do Google</div></div></div><p id="logged" class="good" style="display:none">✓ Credencial recebida do Google. Demonstração de identidade concluída.</p><button id="logout" class="btn" style="display:none;margin-top:15px">Sair da demonstração</button></div></div><div class="smaller" style="margin-top:12px">Observação técnica: os dados exibidos são decodificados no navegador; esta página não faz validação criptográfica nem cria sessão segura.</div></section>
-<section class="slide"><div class="eyebrow">06 / Conclusão</div><h2>Por que usar uma <span class="accent">API de login?</span></h2><div class="grid"><div class="card"><h3>Experiência</h3><p>O usuário aproveita sua conta existente, sem cadastrar outra senha para a aplicação.</p></div><div class="card"><h3>Integração</h3><p>Em vez de desenvolver um provedor de identidade, integramos um serviço externo por JavaScript.</p></div></div><div class="good">Aprendemos como a aplicação solicita uma identidade ao Google, recebe uma resposta e a apresenta ao usuário.</div><p class="lead">Obrigado! Dúvidas?</p><p class="smaller">Fonte: <a class="inline-link" href="https://developers.google.com/identity/gsi/web/guides/overview" target="_blank" rel="noopener noreferrer">Documentação oficial Google Identity Services ↗</a></p></section>
-</main><div class="progress"><div id="bar" style="width:16.67%"></div></div><footer class="footer"><div id="count" class="mini">Slide 1 de 6 • Use ← →</div><div class="nav"><button class="btn" id="prev">← Voltar</button><button class="btn primary" id="next">Próximo →</button></div></footer></div>
-<script src="https://accounts.google.com/gsi/client" async defer></script><script>
-'use strict';
-const slides=[...document.querySelectorAll('.slide')];let step=0;const $=id=>document.getElementById(id);
-function render(){slides.forEach((s,i)=>{s.classList.toggle('active',i===step);s.setAttribute('aria-hidden',i!==step?'true':'false')});$('count').textContent=`Slide ${step+1} de ${slides.length} • Use ← →`;$('bar').style.width=`${100*(step+1)/slides.length}%`;$('prev').disabled=step===0;$('next').textContent=step===slides.length-1?'Recomeçar ↺':'Próximo →'}
-function move(delta){step=(step+delta+slides.length)%slides.length;render()}
-$('prev').onclick=()=>{if(step>0)move(-1)};$('next').onclick=()=>move(1);$('full').onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen?.();document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='ArrowRight')move(1);if(e.key==='ArrowLeft'&&step>0)move(-1)});
-$('origin').textContent=location.origin==='null'?'file:// (não autorizado)':location.origin;
-const storageKey='googleLoginDemoClientId';$('clientId').value='94457593553-5bet35ekjces255rl0kaesu289ev8h9h.apps.googleusercontent.com';
-let initialized=false;
-function errorMessage(m){$('status').textContent=m}
-function decodeJwt(jwt){const parts=jwt.split('.');if(parts.length!==3)throw Error('Credencial inesperada');const payload=parts[1].replace(/-/g,'+').replace(/_/g,'/');const decoded=atob(payload.padEnd(Math.ceil(payload.length/4)*4,'='));return JSON.parse(new TextDecoder().decode(Uint8Array.from(decoded,c=>c.charCodeAt(0))))}
-function gotCredential(response){try{const p=decodeJwt(response.credential);if(typeof p.name!=='string'||typeof p.email!=='string'||!p.sub)throw Error('Dados do perfil ausentes');$('name').textContent=p.name;$('email').textContent=p.email;$('avatar').src=typeof p.picture==='string'&&p.picture.startsWith('https://')?p.picture:'';$('profile').classList.add('show');$('logged').style.display='block';$('logout').style.display='inline-block';$('signInBox').style.display='none';errorMessage('Resposta recebida. A credencial foi decodificada para a apresentação, sem validação no servidor.')}catch(err){errorMessage('Não foi possível interpretar a resposta: '+err.message)}}
-function initialize(){const id=$('clientId').value.trim();if(!/^\d+-[A-Za-z0-9_-]+\.apps\.googleusercontent\.com$/.test(id)){errorMessage('Insira um Client ID válido (termina em .apps.googleusercontent.com).');return}if(location.protocol==='file:'){errorMessage('Abra a versão publicada em HTTPS: o Google não permite login em arquivo file://.');return}if(!window.google?.accounts?.id){errorMessage('Biblioteca do Google não carregou. Verifique a internet e tente novamente.');return}if(initialized){errorMessage('Para trocar o Client ID, atualize a página após salvar o novo valor.');localStorage.setItem(storageKey,id);return}localStorage.setItem(storageKey,id);try{google.accounts.id.initialize({client_id:id,callback:gotCredential,auto_select:false});initialized=true;$('googleButton').replaceChildren();google.accounts.id.renderButton($('googleButton'),{type:'standard',theme:'outline',size:'large',text:'signin_with',shape:'pill',width:270});errorMessage('Botão oficial carregado. Clique para entrar com sua conta Google.')}catch(err){initialized=false;errorMessage('Falha ao iniciar Google: '+err.message)}}
-$('configure').onclick=initialize;
-$('logout').onclick=()=>{$('profile').classList.remove('show');$('logged').style.display='none';$('logout').style.display='none';$('signInBox').style.display='flex';if(window.google?.accounts?.id)google.accounts.id.disableAutoSelect();errorMessage('Saiu da demonstração local. Para trocar de conta, use o botão do Google.')};
-window.addEventListener('load',()=>{if($('clientId').value&&location.protocol!=='file:')initialize()});render();
-</script></body></html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="theme-color" content="#080f1a">
+  <title>Entrar com Google — Aula interativa + Nexus Workspace</title>
+  <style>
+    :root{
+      color-scheme:dark;--bg:#080f1a;--bg2:#0a1623;--surface:#102033;--surface2:#14293d;
+      --stroke:#294055;--stroke2:#36556b;--text:#f7fbff;--muted:#aec1cd;--faint:#7f98aa;
+      --mint:#62e8c8;--mint2:#b0ffe7;--cyan:#88c9ff;--amber:#eccc8e;
+      --shadow:0 24px 80px #0008;--ease:cubic-bezier(.22,1,.36,1);
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:100%;margin:0;overflow:hidden}
+    body{font-family:Inter,"Segoe UI",Arial,system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 88% 11%,#19495e66,transparent 33%),radial-gradient(circle at 7% 85%,#102c3e88,transparent 33%)}
+    body::after{content:"";position:fixed;inset:0;opacity:.26;pointer-events:none;background-image:linear-gradient(#bed8e208 1px,transparent 1px),linear-gradient(90deg,#bed8e208 1px,transparent 1px);background-size:60px 60px;mask-image:linear-gradient(90deg,transparent,#000 40%,transparent)}
+    button,a{font:inherit}button{cursor:pointer}a{color:var(--mint2)}
+    button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+    button:disabled{cursor:default;opacity:.42}
+    .app{height:100dvh;min-height:420px;display:flex;flex-direction:column;position:relative;z-index:1;overflow:hidden}
+    .topbar{height:68px;flex:0 0 68px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(22px,4.7vw,72px);border-bottom:1px solid #e4ffff14;background:#08131ee5;gap:18px}
+    .brand{display:flex;align-items:center;gap:13px;font-size:14px;font-weight:830;letter-spacing:.045em;white-space:nowrap}
+    .brand-mark{width:34px;height:34px;border-radius:11px;background:linear-gradient(140deg,var(--mint),#9ef3df);display:grid;place-items:center;color:#062d31;box-shadow:0 0 27px #59eac636}
+    .brand-mark svg{width:20px;height:20px}
+    .brand small{color:var(--faint);font-weight:620;letter-spacing:.01em}
+    .top-right{display:flex;align-items:center;gap:12px}
+    .label-chip{border:1px solid #335263;color:#b9d2db;border-radius:100px;padding:7px 13px;font-size:11px;font-weight:770;letter-spacing:.08em;white-space:nowrap}
+    .tiny-dot{width:7px;height:7px;background:var(--mint);border-radius:50%;display:inline-block;margin-right:7px;box-shadow:0 0 12px var(--mint)}
+    .topbtn{display:inline-flex;align-items:center;gap:8px;border:1px solid #345268;background:#163047;color:#ecf9fa;padding:9px 14px;border-radius:11px;font-weight:730;font-size:12px;white-space:nowrap;transition:.2s}
+    .topbtn:hover{background:#21445c;transform:translateY(-1px)}
+    .topbtn svg{width:15px;height:15px}
+    .stage{position:relative;flex:1;min-height:0;width:min(100%,1500px);margin:auto;align-self:center;isolation:isolate}
+    .slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:0;padding:clamp(18px,2.9vh,38px) clamp(32px,5.4vw,86px);opacity:0;visibility:hidden;pointer-events:none;transform:translate3d(0,19px,0) scale(.99);transition:opacity .42s ease,transform .55s var(--ease),visibility 0s linear .55s;overflow:hidden}
+    .slide.active{opacity:1;visibility:visible;pointer-events:auto;transform:none;transition:opacity .45s ease,transform .52s var(--ease),visibility 0s}
+    .slide .reveal{transform:translateY(14px);opacity:0;transition:transform .65s var(--ease),opacity .55s ease}
+    .slide.active .reveal{opacity:1;transform:none}
+    .slide.active .reveal:nth-child(2){transition-delay:.08s}.slide.active .reveal:nth-child(3){transition-delay:.16s}.slide.active .reveal:nth-child(4){transition-delay:.23s}
+    .kicker{display:flex;align-items:center;gap:11px;font-size:11px;font-weight:850;letter-spacing:.18em;text-transform:uppercase;color:var(--mint);margin:0 0 15px}
+    .kicker::before{content:"";display:block;width:23px;height:1px;background:var(--mint)}
+    h1,h2,h3,p{margin-top:0}
+    h1{font-size:clamp(44px,5.55vw,79px);line-height:1.055;letter-spacing:-.064em;font-weight:850;margin-bottom:23px}
+    h2{font-size:clamp(33px,4.25vw,59px);line-height:1.09;letter-spacing:-.05em;font-weight:850;margin-bottom:16px;max-width:1040px}
+    h3{font-size:clamp(17px,1.6vw,22px);letter-spacing:-.026em;margin-bottom:9px}
+    .lead{font-size:clamp(16px,1.7vw,23px);line-height:1.54;color:#c1d4df;max-width:925px;margin-bottom:0}
+    .gradient{color:var(--mint)}.dim{color:var(--muted)}
+    .micro{font-size:12px;line-height:1.5;color:var(--faint)}
+    .label{font-size:10px;font-weight:850;letter-spacing:.13em;color:var(--mint);text-transform:uppercase;margin-bottom:12px}
+    .panel{background:linear-gradient(155deg,#162e43f3,#102437ec);border:1px solid var(--stroke);border-radius:20px;box-shadow:0 6px 27px #0002}
+    .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:25px}
+    .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:27px}
+    .info-card{padding:22px 24px;min-width:0}.info-card p{font-size:clamp(13px,1.24vw,16px);color:#c2d3dc;line-height:1.52;margin:0}
+    .card-icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:var(--mint);background:#1b494b;box-shadow:inset 0 0 0 1px #3f817c;margin-bottom:13px}
+    .card-icon svg{width:20px;height:20px}
+    .note-line{font-size:clamp(13px,1.3vw,17px);line-height:1.48;border-left:3px solid var(--mint);color:#c9dbe3;background:#163445a9;border-radius:0 11px 11px 0;padding:13px 18px;margin-top:24px}
+    /* Slide 1: hero */
+    .hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr);gap:35px;align-items:center}
+    .hero .lead{max-width:650px}.hero-meta{display:flex;gap:10px;margin-top:35px;flex-wrap:wrap}
+    .pill{font-size:12px;padding:9px 13px;border:1px solid #335165;background:#1730429c;border-radius:100px;color:#c5d8e1;white-space:nowrap}
+    .hero-visual{border:1px solid #395d6c;border-radius:23px;background:linear-gradient(145deg,#18374c,#0d2132);padding:25px;min-height:352px;position:relative;box-shadow:var(--shadow)}
+    .hero-visual::before{content:"";position:absolute;inset:-15px;border:1px solid #385a5e44;border-radius:32px;z-index:-1}
+    .mock-window-head{display:flex;gap:6px;align-items:center;padding-bottom:17px;border-bottom:1px solid #41607366;color:#a4bdcb;font-size:11px}
+    .window-dot{width:9px;height:9px;border-radius:50%;background:#4b6878}.window-dot:first-child{background:#f38a83}.window-dot:nth-child(2){background:#e7bd6a}.window-dot:nth-child(3){background:#79cca2}
+    .window-address{margin-left:auto;font-family:Consolas,monospace;opacity:.72}
+    .hero-app{display:flex;flex-direction:column;align-items:center;gap:13px;padding:30px 10px 8px;text-align:center}
+    .hero-app-icon{display:grid;place-items:center;background:#65e5c5;color:#082f32;width:57px;height:57px;border-radius:18px;font-weight:900;font-size:28px}
+    .hero-app strong{font-size:22px;letter-spacing:-.04em}.hero-app p{font-size:13px;color:#b9cfda;margin:0}
+    .fake-signin{display:flex;align-items:center;gap:12px;border-radius:11px;background:white;color:#273343;padding:12px 18px;font-weight:720;font-size:14px;margin-top:14px}
+    .g-logo{display:inline-block;font:bold 22px Arial,sans-serif;background:conic-gradient(from -45deg,#4285f4 0 110deg,#34a853 111deg 195deg,#fbbc05 196deg 258deg,#ea4335 259deg 310deg,#4285f4 311deg);background-clip:text;-webkit-background-clip:text;color:transparent}
+    .hero-connector{position:absolute;left:-18px;bottom:32px;border:1px solid #39685e;background:#103f3e;color:#c4ffec;font-weight:750;font-size:11px;padding:11px 16px;border-radius:12px;box-shadow:0 12px 28px #0005}
+    /* API communication */
+    .api-flow{display:grid;grid-template-columns:minmax(0,1fr) 150px minmax(0,1fr);align-items:center;gap:18px;margin-top:29px}
+    .api-node{padding:28px;min-height:220px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+    .api-node .card-icon{width:47px;height:47px;border-radius:14px}
+    .api-node strong{font-size:21px;letter-spacing:-.03em}.api-node small{font-size:14px;color:var(--muted);margin-top:8px;line-height:1.5}
+    .request-path{display:flex;flex-direction:column;align-items:center;gap:17px;color:var(--mint);font-size:11px;font-weight:800;letter-spacing:.13em}
+    .moving-line{width:100%;height:2px;position:relative;background:#2c6270;overflow:visible}
+    .moving-line::after{content:"";position:absolute;width:25px;height:2px;background:var(--mint);left:-15px;box-shadow:0 0 12px var(--mint);animation:send 2.25s linear infinite}
+    .moving-line.return::after{animation-direction:reverse;animation-delay:-1s}
+    @keyframes send{from{left:0}to{left:calc(100% - 25px)}}
+    .api-result{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-top:21px;padding:15px 22px;border:1px solid #33645f;border-radius:13px;background:#133e405c;color:#d0ece5;font-size:14px}
+    /* Google identity */
+    .identity-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);align-items:stretch;gap:24px;margin-top:24px}
+    .identity-list{display:grid;gap:12px}
+    .identity-line{display:flex;align-items:flex-start;gap:15px;padding:17px 19px}
+    .identity-line .card-icon{flex-shrink:0;margin:0;width:35px;height:35px;border-radius:10px}
+    .identity-line strong{font-size:16px}.identity-line p{margin:4px 0 0;font-size:14px;color:var(--muted)}
+    .id-preview{padding:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:15px}
+    .id-preview .hero-app-icon{width:62px;height:62px}.id-preview p{font-size:14px;color:var(--muted);max-width:260px}
+    .id-preview .fake-signin{margin-top:0;box-shadow:0 12px 23px #0004}
+    /* Steps */
+    .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:22px}
+    .step-card{padding:21px 20px;position:relative}
+    .step-card::after{content:"→";position:absolute;right:-14px;top:43%;z-index:2;color:var(--mint);font-weight:900;font-size:22px}
+    .step-card:nth-child(3)::after,.step-card:nth-child(6)::after{display:none}
+    .step-no{font:800 11px Consolas,monospace;color:var(--mint);margin-bottom:14px}
+    .step-card strong{font-size:17px}.step-card p{font-size:13px;color:var(--muted);line-height:1.46;margin:6px 0 0}
+    .glossary{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.glossary span{border:1px solid #3a535e;background:#172b3d;padding:9px 12px;border-radius:9px;color:#c2d9e4;font-size:12px}
+    .glossary b{color:var(--mint)}
+    /* Live demo */
+    .demo-slide{padding-top:14px;padding-bottom:12px}
+    .demo-slide .kicker{margin-bottom:7px}
+    .demo-slide h2{font-size:clamp(27px,3.1vw,43px);margin-bottom:12px}
+    .site{border:1px solid #3a586a;border-radius:17px;overflow:hidden;background:#eef3f8;color:#203045;box-shadow:0 22px 65px #0008;max-height:calc(100% - 90px);min-height:330px}
+    .site-head{height:34px;background:#f8fafb;border-bottom:1px solid #d9e1e8;display:flex;align-items:center;gap:10px;padding:0 17px;color:#647483;font-size:11px}
+    .site-head .window-dot{width:7px;height:7px;background:#e07b7d}.site-head .window-dot:nth-child(2){background:#dfba68}.site-head .window-dot:nth-child(3){background:#64c39f}
+    .address{margin:auto;display:flex;align-items:center;gap:7px;background:#edf1f5;border:1px solid #e0e6ec;border-radius:7px;min-width:min(270px,38%);justify-content:center;padding:3px 13px;font-size:10px;color:#6c7a88}
+    .address svg{width:11px;height:11px}
+    .site-body{position:relative;min-height:380px;background:#f7fafb;color:#183044}
+    .site-login{min-height:380px;display:grid;grid-template-columns:.9fr 1.1fr}
+    .site-promo{color:white;background:radial-gradient(circle at 15% 85%,#2d7283,transparent 48%),linear-gradient(145deg,#102d48,#0d1e32);padding:clamp(22px,2.8vw,39px);display:flex;flex-direction:column;justify-content:space-between;gap:15px}
+    .site-brand{display:flex;align-items:center;gap:9px;font-size:15px;letter-spacing:-.035em;font-weight:850}
+    .nexus-mark{width:29px;height:29px;border-radius:9px;display:grid;place-items:center;background:#64e4c9;color:#08383c;font-size:16px;font-weight:900}
+    .site-promo h3{color:white;font-size:clamp(23px,2.3vw,33px);letter-spacing:-.055em;line-height:1.12;margin:0;max-width:320px}
+    .site-promo p{font-size:12px;line-height:1.54;color:#c0dae4;margin-top:12px;max-width:350px}
+    .site-bullets{display:flex;gap:9px;flex-wrap:wrap}.site-bullets span{border:1px solid #5e909466;padding:7px 9px;color:#d2f0ed;border-radius:7px;font-size:10px}
+    .site-auth{display:flex;align-items:center;justify-content:center;padding:23px 28px}
+    .auth-inner{width:min(100%,400px)}
+    .eyebrow-light{color:#5c7387;font-size:10px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
+    .auth-inner h3{font-size:clamp(25px,2.5vw,34px);line-height:1.16;color:#142a3c;margin:13px 0 9px}
+    .auth-inner p{font-size:13px;line-height:1.55;color:#68798b;margin-bottom:20px}
+    .auth-rule{height:1px;background:#e1e8ef;margin-bottom:18px}
+    #googleButton{min-height:44px;display:flex;align-items:center;justify-content:flex-start;max-width:100%;overflow:visible}
+    .login-loading{font-size:12px;color:#637b8d;display:flex;align-items:center;gap:9px}
+    .spinner{width:15px;height:15px;display:inline-block;border:2px solid #b7ccdb;border-top-color:#208d85;border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    #loginStatus{font-size:11px;line-height:1.5;color:#587084;margin-top:12px;min-height:30px}
+    .site-help{margin-top:17px;color:#96a7b6;font-size:10px;line-height:1.4}
+    .site-help svg{width:12px;height:12px;vertical-align:-2px}
+    .site-dashboard{display:none;min-height:380px;height:100%;grid-template-columns:150px minmax(0,1fr)}
+    .site-dashboard.is-shown{display:grid}.site-login.is-hidden{display:none}
+    .nexus-sidebar{background:#112b41;color:white;padding:19px 14px;display:flex;flex-direction:column;gap:17px}
+    .nexus-sidebar .site-brand{font-size:12px}.nexus-sidebar .nexus-mark{width:24px;height:24px;font-size:13px;border-radius:7px}
+    .nexus-side-button{width:100%;border:0;text-align:left;background:transparent;color:#a9c6d5;padding:10px 11px;border-radius:8px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:9px;transition:.2s}
+    .nexus-side-button svg{width:15px;height:15px}
+    .nexus-side-button.active,.nexus-side-button:hover{background:#255468;color:white}
+    .side-caption{margin-top:auto;color:#88a6b8;font-size:10px;line-height:1.4;border-top:1px solid #305067;padding-top:10px}
+    .nexus-main{padding:15px 22px 19px;min-width:0;display:flex;flex-direction:column;gap:12px}
+    .nexus-top{display:flex;align-items:center;justify-content:space-between;gap:9px;font-size:11px;color:#647e90}
+    .nexus-top strong{font-size:12px;color:#263e52}
+    .session-pill{display:flex;align-items:center;gap:7px;background:#e9f7f2;color:#14745e;border:1px solid #c4e4d6;border-radius:100px;padding:6px 9px;font-size:10px;font-weight:750}
+    .session-pill::before{content:"";width:6px;height:6px;border-radius:50%;background:#20a983}
+    .dash-heading{border-radius:13px;background:linear-gradient(100deg,#123f58,#1d6170);color:white;padding:18px 19px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .dash-heading .dash-caption{font-size:10px;letter-spacing:.13em;font-weight:750;color:#b2e6e0;text-transform:uppercase}
+    .dash-heading h3{font-size:clamp(19px,2.1vw,28px);line-height:1.15;margin:6px 0;word-break:break-word}
+    .dash-heading p{font-size:11px;color:#dbedef;margin:0}
+    .dash-avatar{border-radius:50%;width:56px;height:56px;flex-shrink:0;border:3px solid #d3f5ed55;background:#64e3c9;color:#174c53;display:grid;place-items:center;font-size:18px;font-weight:900;overflow:hidden}
+    .dash-avatar img{width:100%;height:100%;object-fit:cover;display:none}
+    .dash-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+    .dash-tile{border:1px solid #dbe5eb;border-radius:10px;background:#fff;padding:12px;min-width:0}
+    .dash-tile strong{font-size:18px;display:block;color:#183c50}.dash-tile span{font-size:10px;color:#687e8b;line-height:1.35;display:block;margin-top:4px}
+    .dash-bottom{border:1px solid #dee9ed;border-radius:11px;background:white;padding:11px 14px;display:flex;gap:15px;justify-content:space-between;align-items:center}
+    .dash-bottom strong{font-size:12px;color:#263b4b;display:block}
+    .dash-bottom p{font-size:10px;color:#8093a1;margin:4px 0 0;max-width:330px}
+    .nexus-action{border:1px solid #c4d8dc;background:#ebf5f5;color:#246579;border-radius:8px;padding:8px 10px;font-size:10px;font-weight:850;white-space:nowrap}
+    .nexus-action:hover{background:#d7ecec}
+    .nexus-logout{background:#fff;border:1px solid #d0dfe6;padding:8px 11px;border-radius:8px;color:#426072;font-size:11px;font-weight:750;white-space:nowrap}
+    .nexus-logout:hover{background:#eaf1f5}
+    .profile-pane{display:none;background:#fff;border:1px solid #dce7ec;border-radius:13px;padding:20px;min-height:245px}
+    .profile-pane.active{display:block}
+    .profile-pane h3{font-size:19px;color:#1b3b4b;margin-bottom:9px}.profile-pane p{font-size:11px;color:#758b98;line-height:1.5}
+    .profile-field{border-top:1px solid #e3ecf0;padding:10px 0;display:grid;grid-template-columns:110px minmax(0,1fr);gap:10px;font-size:12px;color:#264656;overflow-wrap:anywhere}
+    .profile-field span{color:#7b8e9b}
+    .presentation-caveat{color:#a9c0cf;font-size:11px;margin:8px 0 0;line-height:1.45}
+    /* Behind the scenes */
+    .token-diagram{display:grid;grid-template-columns:1fr .9fr;gap:23px;align-items:stretch;margin-top:27px}
+    .token-left{padding:26px 28px}.token-parts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:22px 0 18px}
+    .jwt-part{text-align:center;border-radius:10px;padding:19px 8px;font-family:Consolas,monospace;font-size:clamp(13px,1.4vw,17px);font-weight:800;overflow:hidden}
+    .jwt-part:nth-child(1){background:#285476;color:#c2e4ff}.jwt-part:nth-child(2){background:#195b57;color:#bdffef}.jwt-part:nth-child(3){background:#594c37;color:#ffe7bf}
+    .jwt-part small{display:block;font:600 10px Inter,"Segoe UI",sans-serif;letter-spacing:.06em;margin-top:9px;opacity:.9}
+    .token-left p{font-size:13px;color:#bbd3df;line-height:1.56;margin:0}
+    .token-code{padding:21px 24px}.code-sample{background:#071522;border:1px solid #345063;padding:17px;border-radius:11px;color:#b9e7dc;font:clamp(11px,1.05vw,14px)/1.7 Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+    .token-code .micro{margin:9px 0 0}
+    /* Security */
+    .security-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:19px;margin-top:22px}
+    .security-box{padding:24px}.security-box h3{font-size:20px}
+    .security-box ol{padding-left:20px;color:#c4d8e3;line-height:1.67;font-size:14px;margin-bottom:0}
+    .security-box li{padding-left:4px;margin:4px 0}
+    .security-box strong{color:white}
+    .security-tag{display:inline-block;border:1px solid #46686e;border-radius:100px;color:#9befd9;font-size:10px;padding:7px 10px;margin-bottom:13px;font-weight:770;letter-spacing:.06em}
+    .security-box.production{background:linear-gradient(145deg,#1a3449,#153240)}
+    /* Closing */
+    .closing{text-align:center;align-items:center}
+    .closing h1{max-width:950px}.closing .lead{max-width:700px}
+    .recap{display:flex;align-items:center;gap:11px;justify-content:center;margin:31px 0;flex-wrap:wrap}
+    .recap b{padding:13px 17px;border-radius:11px;border:1px solid #3a6170;background:#173a4b;color:#dcf6f0;font-size:clamp(11px,1.05vw,15px)}
+    .recap em{color:var(--mint);font-style:normal;font-size:18px}
+    .source-link{display:inline-flex;align-items:center;gap:8px;padding:12px 17px;border:1px solid #437163;border-radius:10px;text-decoration:none;color:var(--mint2);font-size:13px;font-weight:740}
+    .source-link:hover{background:#13423e}
+    /* Bottom controls */
+    .bottom{height:64px;flex:0 0 64px;display:flex;justify-content:space-between;gap:14px;align-items:center;border-top:1px solid #e4ffff15;padding:0 clamp(22px,4.7vw,72px);background:#08131fea}
+    .page-count{color:#99b0bf;font-size:12px;display:flex;align-items:center;gap:16px}
+    .page-count strong{font-variant-numeric:tabular-nums;color:#e4f6fc;font-weight:770}
+    .navbtns{display:flex;gap:9px}.navbtn{border-radius:10px;padding:9px 15px;border:1px solid #3a576c;color:white;background:#193246;font-size:12px;font-weight:790;white-space:nowrap}
+    .navbtn.primary{background:var(--mint);border-color:var(--mint);color:#093638}
+    .navbtn:not(:disabled):hover{filter:brightness(1.13)}
+    .meter{height:3px;flex:0 0 3px;background:#1d3448}.meter>div{width:12.5%;height:100%;background:linear-gradient(90deg,#42d5b5,#80ffe1);transition:width .5s var(--ease)}
+    /* Speaker notes */
+    .speaker-notes{display:none;position:absolute;z-index:20;bottom:68px;left:clamp(22px,4.7vw,72px);right:clamp(22px,4.7vw,72px);background:#10283cf7;border:1px solid #4f7281;border-radius:13px;padding:16px 20px;box-shadow:0 18px 45px #0009;max-height:34vh;overflow:auto}
+    .speaker-notes.open{display:block}.speaker-notes strong{display:block;color:var(--mint);font-size:10px;letter-spacing:.12em;margin-bottom:8px}
+    .speaker-notes p{font-size:14px;color:#d6e8ec;line-height:1.6;margin:0}
+    .shortcut{color:#819cab;font-size:10px}
+    @media(max-height:740px){
+      .topbar{height:52px;flex-basis:52px}.bottom{height:52px;flex-basis:52px}.slide{padding-top:13px;padding-bottom:12px}
+      .kicker{margin-bottom:9px}h1{font-size:clamp(40px,4.8vw,65px);margin-bottom:15px}h2{font-size:clamp(30px,3.55vw,49px);margin-bottom:10px}
+      .grid2,.grid3{margin-top:15px}.info-card{padding:16px 19px}.info-card p{font-size:13px}.card-icon{margin-bottom:8px}
+      .hero-visual{padding:18px;min-height:300px}.hero-app{padding:20px 7px 6px}.hero-meta{margin-top:23px}
+      .identity-layout{margin-top:15px}.identity-line{padding:12px 15px}.api-node{min-height:170px;padding:20px}
+      .api-flow{margin-top:18px}.note-line{margin-top:14px;padding:10px 15px}
+      .steps{margin-top:15px;gap:10px}.step-card{padding:13px 17px}.step-no{margin-bottom:7px}.step-card p{font-size:12px}
+      .glossary{margin-top:11px}.glossary span{padding:7px 10px}
+      .demo-slide h2{font-size:clamp(27px,2.8vw,38px);margin-bottom:8px}.site{max-height:calc(100% - 75px)}.site-body,.site-login,.site-dashboard{min-height:330px}
+      .site-auth{padding:16px 23px}.site-promo{padding:22px}.site-promo h3{font-size:25px}.site-promo p{margin-top:9px}
+      .nexus-main{gap:9px;padding:11px 17px}.dash-heading{padding:12px 15px}.dash-tile{padding:9px}.dash-bottom{padding:9px 12px}
+      .token-diagram{margin-top:16px}.token-left,.token-code{padding:17px}.token-parts{margin:15px 0}.jwt-part{padding:12px 5px}
+      .security-grid{margin-top:14px}.security-box{padding:18px}.security-box ol{font-size:13px;line-height:1.52}
+    }
+    @media(max-height:650px){.slide:nth-of-type(3),.slide:nth-of-type(8){zoom:.86}}
+    @media(max-height:560px){.label-chip,.topbtn.notes-button,.shortcut{display:none}.site-body,.site-login,.site-dashboard{min-height:295px}.slide:not(.demo-slide){zoom:.84}}
+    @media(max-width:940px){
+      .slide{padding-left:30px;padding-right:30px}.hero{gap:20px;grid-template-columns:1.1fr .9fr}.hero-visual{padding:16px;min-height:290px}
+      .api-flow{grid-template-columns:1fr 105px 1fr}.identity-layout{grid-template-columns:1fr .85fr;gap:13px}
+      .id-preview{padding:18px}.site-dashboard{grid-template-columns:120px minmax(0,1fr)}.nexus-sidebar{padding:14px 9px}.nexus-main{padding:12px}
+    }
+    @media(max-width:680px){
+      .app{min-height:380px}.topbar{padding:0 16px}.bottom{padding:0 16px}.brand small,.label-chip,.shortcut{display:none}
+      .slide{padding:15px 16px}.hero{grid-template-columns:1fr}.hero-visual{display:none}
+      h1{font-size:clamp(36px,9vw,53px)}h2{font-size:clamp(29px,7vw,42px)}.lead{font-size:15px}
+      .grid3,.grid2,.identity-layout,.token-diagram,.security-grid{grid-template-columns:1fr}
+      .grid2{gap:10px}.info-card{padding:13px}.info-card p{font-size:12px}.grid3 .info-card:nth-child(3){display:none}
+      .identity-layout .id-preview{display:none}.identity-line{padding:12px}
+      .api-flow{grid-template-columns:1fr 48px 1fr;gap:7px}.api-node{padding:14px;min-height:165px}.api-node strong{font-size:16px}.api-node small{font-size:11px}
+      .request-path{font-size:8px}.steps{grid-template-columns:repeat(2,1fr)}.step-card{padding:11px}.step-card:nth-child(3)::after{display:block}.step-card:nth-child(2)::after,.step-card:nth-child(4)::after,.step-card:nth-child(6)::after{display:none}
+      .glossary span:nth-child(3){display:none}.site-login{grid-template-columns:1fr}.site-promo{display:none}.site-head{height:26px}.site{min-height:0}.site-body,.site-login,.site-dashboard{min-height:350px}.site-auth{padding:22px}
+      .site-dashboard{grid-template-columns:90px 1fr}.nexus-sidebar{padding:10px 5px}.nexus-sidebar .site-brand{font-size:0}.nexus-side-button{font-size:10px;padding:8px 5px;gap:4px}.side-caption{font-size:9px}
+      .nexus-main{padding:9px;gap:7px}.dash-heading{padding:10px}.dash-heading h3{font-size:17px}.dash-avatar{width:38px;height:38px}.dash-grid{gap:5px}.dash-tile{padding:7px}.dash-tile strong{font-size:14px}.dash-tile span{font-size:8px}.dash-bottom p{display:none}
+      .profile-field{grid-template-columns:65px 1fr;font-size:10px}.presentation-caveat{font-size:9px}
+      .security-grid{gap:7px;margin-top:8px}.security-box{padding:10px 13px}.security-box ol{font-size:11px;line-height:1.28}.security-box li{margin:2px 0}.security-box h3{font-size:16px;margin-bottom:5px}
+      .token-code{display:none}.token-parts{margin:10px 0}.security-box{padding:13px}.security-box ol{font-size:12px}
+      .recap{gap:6px}.recap b{padding:8px;font-size:9px}.recap em{font-size:12px}
+    }
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+    @media print{html,body{height:auto;overflow:visible;background:white;color:#101c2c}.topbar,.bottom,.meter,.speaker-notes{display:none!important}.app,.stage{display:block;height:auto;overflow:visible}.slide{position:relative;display:flex;opacity:1!important;visibility:visible!important;transform:none!important;min-height:92vh;page-break-after:always;color:#10243a;overflow:visible}.slide .reveal{opacity:1!important;transform:none!important}.panel{background:#f4f8fa!important;color:#15283a!important}.panel *{color:#15283a!important}.site{color:#15283a!important}}
+  </style>
+</head>
+<body>
+<!-- Ícones SVG vetoriais locais; não dependem de bibliotecas externas. -->
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <symbol id="i-nexus" viewBox="0 0 24 24"><path fill="currentColor" d="M4 4h5l6 9V4h5v16h-5L9 11v9H4z"/></symbol>
+  <symbol id="i-full" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M8 21H3v-5m13 5h5v-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 6-6 6 6 6m8-12 6 6-6 6m-3-17-4 24" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 21c0-5 3.5-7 8-7s8 2 8 7" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2 4 5v7c0 5 3.2 8.2 8 10 4.8-1.8 8-5 8-10V5z" stroke="currentColor" stroke-width="1.7" fill="none"/><path d="m8 12 3 3 5-6" stroke="currentColor" stroke-width="1.7" fill="none"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 .6l3-3a5 5 0 0 0-7-7L11 6m2 5a5 5 0 0 0-7-.6l-3 3a5 5 0 0 0 7 7l2-2" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="8" height="8" rx="1.6" stroke="currentColor" fill="none" stroke-width="1.7"/><rect x="13.5" y="2.5" width="8" height="8" rx="1.6" stroke="currentColor" fill="none" stroke-width="1.7"/><rect x="2.5" y="13.5" width="8" height="8" rx="1.6" stroke="currentColor" fill="none" stroke-width="1.7"/><rect x="13.5" y="13.5" width="8" height="8" rx="1.6" stroke="currentColor" fill="none" stroke-width="1.7"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="12" rx="2" stroke="currentColor" fill="none" stroke-width="1.8"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8" fill="none"/></symbol>
+</svg>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark"><svg><use href="#i-nexus"/></svg></span><span>GOOGLE IDENTITY <small>/ AULA INTERATIVA</small></span></div>
+    <div class="top-right">
+      <div class="label-chip"><i class="tiny-dot"></i>DEMONSTRAÇÃO REAL · 2026</div>
+      <button class="topbtn notes-button" type="button" id="notesBtn" title="Mostrar ou ocultar roteiro (tecla N)">Notas <span class="shortcut">N</span></button>
+      <button class="topbtn" type="button" id="fullBtn" title="Tela cheia (tecla F)"><svg><use href="#i-full"/></svg> Tela cheia</button>
+    </div>
+  </header>
+  <main class="stage" id="stage">
+    <!-- SLIDE 1 -->
+    <section class="slide active" aria-label="Slide 1 - Abertura" data-title="Abertura">
+      <div class="hero">
+        <div class="reveal">
+          <p class="kicker">01 / Abertura · 35 segundos</p>
+          <h1>Como funciona o botão <span class="gradient">“Entrar com Google”?</span></h1>
+          <p class="lead">Uma aula prática sobre APIs, identidade digital e o que acontece entre o clique e o acesso a um sistema.</p>
+          <div class="hero-meta"><span class="pill">API & integração</span><span class="pill">OAuth 2.0 + OpenID Connect</span><span class="pill">Login real no navegador</span></div>
+        </div>
+        <div class="hero-visual reveal" aria-label="Ilustração do login em uma aplicação">
+          <div class="mock-window-head"><i class="window-dot"></i><i class="window-dot"></i><i class="window-dot"></i><span class="window-address">workspace.example / entrar</span></div>
+          <div class="hero-app"><span class="hero-app-icon">N</span><strong>Bem-vindo ao Nexus</strong><p>Uma identidade. Uma experiência personalizada.</p><div class="fake-signin"><span class="g-logo">G</span> Entrar com Google</div></div>
+          <div class="hero-connector">Da teoria ao login de verdade <span aria-hidden="true">↗</span></div>
+        </div>
+      </div>
+    </section>
+    <!-- SLIDE 2 -->
+    <section class="slide" aria-label="Slide 2 - O que é uma API" data-title="O que é uma API?">
+      <div class="reveal"><p class="kicker">02 / O conceito · 45 segundos</p><h2>Uma API é uma <span class="gradient">ponte entre sistemas.</span></h2><p class="lead">Ela define como uma aplicação solicita uma função ou informação de outra, sem precisar construir tudo do zero.</p></div>
+      <div class="api-flow reveal">
+        <div class="api-node panel"><div class="card-icon"><svg><use href="#i-code"/></svg></div><strong>Nosso aplicativo</strong><small>“Google, quem é a pessoa que acabou de entrar?”</small></div>
+        <div class="request-path"><span>REQUISIÇÃO</span><i class="moving-line"></i><span>RESPOSTA</span><i class="moving-line return"></i></div>
+        <div class="api-node panel"><div class="card-icon"><svg><use href="#i-link"/></svg></div><strong>Serviço do Google</strong><small>Atende à solicitação seguindo um protocolo definido.</small></div>
+      </div>
+      <div class="api-result reveal"><span><b class="gradient">Exemplo cotidiano:</b> como um restaurante recebe um pedido e devolve um prato, uma API recebe uma requisição e devolve uma resposta.</span><span aria-hidden="true">↗</span></div>
+    </section>
+    <!-- SLIDE 3 -->
+    <section class="slide" aria-label="Slide 3 - Google Identity Services" data-title="Google Identity Services">
+      <div class="reveal"><p class="kicker">03 / O serviço · 45 segundos</p><h2>O que é o <span class="gradient">Google Identity Services?</span></h2><p class="lead">É o conjunto de recursos do Google que permite a um site oferecer login usando uma conta Google existente.</p></div>
+      <div class="identity-layout reveal">
+        <div class="identity-list">
+          <div class="identity-line panel"><span class="card-icon"><svg><use href="#i-user"/></svg></span><div><strong>Identidade compartilhada</strong><p>Nome, e-mail e foto podem chegar ao aplicativo pelo ID Token.</p></div></div>
+          <div class="identity-line panel"><span class="card-icon"><svg><use href="#i-lock"/></svg></span><div><strong>A senha fica no Google</strong><p>Nosso HTML não pede nem recebe a senha da conta.</p></div></div>
+          <div class="identity-line panel"><span class="card-icon"><svg><use href="#i-check"/></svg></span><div><strong>Menos atrito para entrar</strong><p>O usuário pode aproveitar uma conta que já possui.</p></div></div>
+        </div>
+        <div class="id-preview panel"><span class="hero-app-icon">N</span><h3>Nexus Workspace</h3><p>Exemplo visual do componente de entrada. O botão Google funcional estará no slide 5.</p><div class="fake-signin"><span class="g-logo">G</span> Entrar com Google</div><span class="micro">Só identidade básica. Nenhum acesso à caixa de entrada.</span></div>
+      </div>
+    </section>
+    <!-- SLIDE 4 -->
+    <section class="slide" aria-label="Slide 4 - Fluxo de autenticação" data-title="O caminho do login">
+      <div class="reveal"><p class="kicker">04 / O fluxo · 60 segundos</p><h2>O que acontece depois do <span class="gradient">clique?</span></h2></div>
+      <div class="steps reveal">
+        <div class="step-card panel"><div class="step-no">PASSO 01</div><strong>Acessa o site</strong><p>O usuário chega à tela do Nexus Workspace.</p></div>
+        <div class="step-card panel"><div class="step-no">PASSO 02</div><strong>Clica para entrar</strong><p>O botão oficial inicia o fluxo do Google.</p></div>
+        <div class="step-card panel"><div class="step-no">PASSO 03</div><strong>Escolhe uma conta</strong><p>O Google confirma a identidade e o consentimento.</p></div>
+        <div class="step-card panel"><div class="step-no">PASSO 04</div><strong>Retorna a credencial</strong><p>O navegador recebe um ID Token no formato JWT.</p></div>
+        <div class="step-card panel"><div class="step-no">PASSO 05</div><strong>Interpreta dados</strong><p>Nosso exemplo lê nome, e-mail e foto do token.</p></div>
+        <div class="step-card panel"><div class="step-no">PASSO 06</div><strong>Personaliza a tela</strong><p>O Nexus exibe o painel com o perfil recebido.</p></div>
+      </div>
+      <div class="glossary reveal"><span><b>OAuth 2.0:</b> base para delegar autorização</span><span><b>OpenID Connect:</b> identidade sobre OAuth 2.0</span><span><b>Client ID:</b> identifica o aplicativo</span></div>
+    </section>
+    <!-- SLIDE 5 -->
+    <section class="slide demo-slide" id="slideDemo" aria-label="Slide 5 - Demonstração real" data-title="Demonstração ao vivo">
+      <div class="reveal"><p class="kicker">05 / Demonstração ao vivo · 90 segundos</p><h2>Agora, o login <span class="gradient">acontece de verdade.</span></h2></div>
+      <div class="site reveal" role="region" aria-label="Nexus Workspace, sistema de demonstração">
+        <div class="site-head"><i class="window-dot"></i><i class="window-dot"></i><i class="window-dot"></i><div class="address"><svg><use href="#i-lock"/></svg> Nexus Workspace · Portal de demonstração</div></div>
+        <div class="site-body">
+          <div class="site-login" id="siteLogin">
+            <div class="site-promo"><div class="site-brand"><span class="nexus-mark">N</span> nexus <span style="font-weight:400;opacity:.67">workspace</span></div><div><h3>Seu espaço de trabalho começa aqui.</h3><p>Uma experiência simples para demonstrar como um sistema pode conhecer seu usuário a partir da identidade do Google.</p></div><div class="site-bullets"><span>Identidade Google</span><span>Perfil personalizado</span><span>Interface interativa</span></div></div>
+            <div class="site-auth"><div class="auth-inner"><div class="eyebrow-light">ACESSO À PLATAFORMA</div><h3>Que bom ter você por aqui.</h3><p>Use sua conta Google para visualizar seu ambiente personalizado.</p><div class="auth-rule"></div><div id="googleButton" aria-label="Botão oficial de entrada com o Google"><span class="login-loading"><i class="spinner"></i> Carregando acesso Google…</span></div><div id="loginStatus" role="status" aria-live="polite">O botão oficial será exibido aqui.</div><div class="site-help"><svg><use href="#i-shield"/></svg> Seus dados são utilizados apenas nesta demonstração, sem armazenamento no navegador.</div></div></div>
+          </div>
+          <div class="site-dashboard" id="siteDashboard" aria-label="Painel ilustrativo do Nexus Workspace">
+            <aside class="nexus-sidebar"><div class="site-brand"><span class="nexus-mark">N</span> nexus</div><nav aria-label="Navegação interna da demonstração"><button type="button" class="nexus-side-button active" id="tabHome"><svg><use href="#i-grid"/></svg> Início</button><button type="button" class="nexus-side-button" id="tabProfile"><svg><use href="#i-user"/></svg> Meu perfil</button></nav><p class="side-caption">Ambiente ilustrativo<br>Sem acesso ao Gmail ou Drive</p></aside>
+            <div class="nexus-main"><div class="nexus-top"><strong id="dashSectionTitle">Visão geral</strong><div style="display:flex;gap:8px;align-items:center"><span class="session-pill">Perfil recebido</span><button type="button" class="nexus-logout" id="logout">Sair</button></div></div>
+              <div id="homePane"><div class="dash-heading"><div><span class="dash-caption">NEXUS WORKSPACE</span><h3 id="dashGreeting">Olá!</h3><p>Seja bem-vindo ao seu espaço de demonstração.</p></div><div class="dash-avatar" id="avatarShell"><span id="avatarInitials">NW</span><img id="avatarImage" alt="Foto do perfil Google"></div></div>
+                <div class="dash-grid" style="margin-top:11px"><div class="dash-tile"><strong>01</strong><span>Conta Google apresentada</span></div><div class="dash-tile"><strong>03</strong><span>Dados básicos: nome, e-mail, foto</span></div><div class="dash-tile"><strong>100%</strong><span>Interface demonstrativa</span></div></div>
+                <div class="dash-bottom" style="margin-top:10px"><div><strong>Identidade conectada à experiência</strong><p>Este painel é ilustrativo: não consulta tarefas, e-mails ou outros serviços Google.</p></div><button class="nexus-action" id="openProfile" type="button">Ver perfil →</button></div>
+              </div>
+              <div class="profile-pane" id="profilePane"><h3>Seu perfil Google</h3><p>Informações recebidas no navegador pela resposta do Google Identity Services.</p><div class="profile-field"><span>Nome</span><strong id="profileFullName"></strong></div><div class="profile-field"><span>E-mail</span><strong id="profileEmail"></strong></div><div class="profile-field"><span>Imagem</span><strong id="profilePhotoState"></strong></div><button class="nexus-action" id="backHome" type="button">← Voltar ao início</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="presentation-caveat">Demonstração educacional: os dados são lidos do ID Token no navegador. Sem backend, não há verificação criptográfica da credencial nem sessão segura.</p>
+    </section>
+    <!-- SLIDE 6 -->
+    <section class="slide" aria-label="Slide 6 - A resposta por trás do login" data-title="Por trás da resposta">
+      <div class="reveal"><p class="kicker">06 / Nos bastidores · 55 segundos</p><h2>O que o Google <span class="gradient">devolveu?</span></h2><p class="lead">Um <b>ID Token</b>, que é um JWT: uma credencial com partes codificadas e dados sobre a identidade.</p></div>
+      <div class="token-diagram reveal">
+        <div class="panel token-left"><div class="label">ESTRUTURA ILUSTRATIVA DO TOKEN</div><div class="token-parts"><div class="jwt-part">header<small>Cabeçalho</small></div><div class="jwt-part">payload<small>Dados</small></div><div class="jwt-part">signature<small>Assinatura</small></div></div><p>O campo <code>credential</code> recebido no callback contém o JWT. Neste HTML, decodificamos o <b>payload</b> para apresentar a interface personalizada.</p></div>
+        <div class="panel token-code"><div class="label">PAYLOAD · EXEMPLO FICTÍCIO</div><div class="code-sample">{
+  "name": "Pessoa Exemplo",
+  "email": "pessoa@exemplo.com",
+  "picture": "https://.../foto.jpg",
+  "sub": "identificador-da-conta"
+}</div><p class="micro">Decodificar é diferente de validar a assinatura. Não mostramos o token real do usuário.</p></div>
+      </div>
+    </section>
+    <!-- SLIDE 7 -->
+    <section class="slide" aria-label="Slide 7 - Segurança" data-title="Segurança na prática">
+      <div class="reveal"><p class="kicker">07 / Boas práticas · 55 segundos</p><h2>O que torna esse login <span class="gradient">seguro em produção?</span></h2><p class="lead">Usar o Google facilita a entrada, mas a segurança do acesso ao sistema continua sendo responsabilidade da aplicação.</p></div>
+      <div class="security-grid reveal"><div class="panel security-box"><span class="security-tag">O QUE NOSSO HTML FAZ</span><h3>Uma demonstração didática</h3><ol><li>Exibe o botão oficial de login.</li><li>Recebe uma credencial no navegador.</li><li>Interpreta campos para apresentar o perfil.</li><li><strong>Não</strong> guarda tokens nem protege dados privados.</li></ol></div><div class="panel security-box production"><span class="security-tag">O QUE UM SISTEMA REAL EXIGE</span><h3>Verificação e sessão</h3><ol><li>Enviar o ID Token por HTTPS ao servidor.</li><li>Verificar <strong>assinatura, emissor, audiência e expiração</strong>.</li><li>Identificar a conta pelo campo <strong>sub</strong>.</li><li>Criar uma sessão segura e aplicar permissões.</li></ol></div></div>
+      <p class="note-line reveal">O <b>Client ID</b> identifica o aplicativo: não é um Client Secret. E a senha do Google nunca é recebida pelo nosso site.</p>
+    </section>
+    <!-- SLIDE 8 -->
+    <section class="slide closing" aria-label="Slide 8 - Encerramento" data-title="Encerramento">
+      <p class="kicker reveal">08 / Encerramento · 35 segundos</p>
+      <h1 class="reveal">Uma API. <span class="gradient">Milhões de possibilidades.</span></h1>
+      <p class="lead reveal">Hoje vimos como uma integração transforma uma identidade Google em uma experiência personalizada dentro de outro sistema.</p>
+      <div class="recap reveal"><b>API</b><em>→</em><b>Integração</b><em>→</em><b>Identidade</b><em>→</em><b>Interface personalizada</b></div>
+      <a class="source-link reveal" href="https://developers.google.com/identity/gsi/web/guides/overview" target="_blank" rel="noopener noreferrer">Documentação oficial Google Identity Services ↗</a>
+      <p class="micro" style="margin-top:20px">Obrigado! Perguntas?</p>
+    </section>
+  </main>
+  <div class="speaker-notes" id="speakerNotes" role="region" aria-label="Roteiro do apresentador"><strong>ROTEIRO DO APRESENTADOR</strong><p id="speakerText"></p></div>
+  <div class="meter"><div id="meterValue"></div></div>
+  <footer class="bottom"><div class="page-count"><strong id="slideCount">01 / 08</strong><span id="slideName">Abertura</span><span class="shortcut">← → navegar · N notas · F tela cheia</span></div><div class="navbtns"><button type="button" class="navbtn" id="prevBtn">← Voltar</button><button type="button" class="navbtn primary" id="nextBtn">Próximo →</button></div></footer>
+</div>
+<script>
+(()=>{
+  'use strict';
+  // OAuth Client ID público do aplicativo de demonstração (NUNCA inserir Client Secret no frontend).
+  const GOOGLE_CLIENT_ID='94457593553-5bet35ekjces255rl0kaesu289ev8h9h.apps.googleusercontent.com';
+  const $=id=>document.getElementById(id);
+  const slides=[...document.querySelectorAll('.slide')];
+  let slideIndex=0,notesVisible=false,googleReady=false,buttonRendered=false,googleInitialized=false,sdkState='loading';
+  // O perfil é mantido SOMENTE em memória até o usuário sair/atualizar a página.
+  let demoProfile=null;
+  const notes=[
+    'Hoje a pergunta é simples: como sites diferentes conseguem oferecer o botão Entrar com Google? Vamos começar entendendo o papel das APIs e depois acompanhar o processo completo. A parte mais importante será uma demonstração real: vou usar uma conta Google para entrar no Nexus Workspace, uma aplicação de exemplo criada apenas para esta aula. O nome e a foto exibidos não estarão escritos previamente no código: virão da resposta do Google.',
+    'Uma API define uma forma organizada de comunicação entre sistemas. Pense em um restaurante: você faz o pedido, ele chega à cozinha, e o resultado volta para você. Aqui, nosso site precisa de um serviço de identidade e usa o Google em vez de desenvolver essa infraestrutura. Vale lembrar que, no login do Google, parte importante da interação acontece por meio da biblioteca oficial e de um fluxo controlado pelo provedor de identidade.',
+    'Google Identity Services é o serviço usado para exibir o botão de login e devolver uma credencial com informações de identidade. Podemos receber dados básicos como nome, e-mail e foto, quando disponibilizados. Isso não significa ter acesso ao Gmail ou aos arquivos do usuário. Nosso aplicativo também não recebe a senha: o Google gerencia a autenticação. Usar uma conta existente deixa a experiência mais familiar para o usuário.',
+    'Vamos observar as etapas. Primeiro, o site mostra o botão. O usuário clica e escolhe sua conta na interface do Google. Ao concluir, o Google entrega uma credencial chamada ID Token, normalmente no formato JWT. O aplicativo consegue usar os dados para personalizar sua tela. OAuth 2.0 é a base do ecossistema de autorização; OpenID Connect acrescenta a camada de identidade. Um detalhe: ler o token no navegador não é suficiente para conceder acesso seguro em um sistema real.',
+    'Chegamos ao exemplo prático. Este é o Nexus Workspace, um site demonstrativo feito com HTML, CSS e JavaScript. Vou clicar no botão oficial do Google e escolher uma conta. Ao retornar, a interface passa a mostrar o primeiro nome, a foto quando existir e um painel personalizado. No menu Meu perfil, podemos ver o nome e o e-mail retornados. A parte de produtividade é ilustrativa; ela não consulta nenhum serviço privado do Google. Também posso sair da demonstração e escolher outra conta.',
+    'Agora que fizemos o login, vamos entender o que chegou ao navegador. O Google devolveu um ID Token no formato JWT, com cabeçalho, conteúdo e assinatura. Dentro do conteúdo, ou payload, podem aparecer campos como name, email e picture. O exemplo à direita é fictício. Nosso código decodifica esses campos para atualizar a interface. Mas decodificar não verifica a assinatura: numa aplicação real, o servidor precisa garantir que a credencial é legítima.',
+    'É aqui que precisamos distinguir uma prova de conceito de um sistema em produção. Nosso HTML não possui servidor, então apenas apresenta as informações recebidas no navegador, sem estabelecer uma sessão confiável. Para proteger dados, um backend validaria a assinatura, o emissor, a audiência e a validade do ID Token, identificaria a conta pelo sub e criaria uma sessão com as permissões necessárias. O Client ID é público; o Client Secret nunca deve ser colocado no JavaScript do navegador.',
+    'Para resumir: conhecemos o conceito de API, vimos o Google Identity Services, acompanhamos um fluxo de autenticação e realizamos um login real dentro de um sistema de demonstração. O ponto mais interessante é perceber que a identidade pode vir de um serviço externo e ser usada para construir uma experiência personalizada. A mesma ideia de integração está presente em muitos aplicativos que usamos diariamente. Obrigado; fico à disposição para perguntas.'
+  ];
+  function renderSlide(){
+    slides.forEach((s,i)=>{const active=i===slideIndex;s.classList.toggle('active',active);s.setAttribute('aria-hidden',String(!active));});
+    $('slideCount').textContent=`${String(slideIndex+1).padStart(2,'0')} / ${String(slides.length).padStart(2,'0')}`;
+    $('slideName').textContent=slides[slideIndex].dataset.title;
+    $('meterValue').style.width=((slideIndex+1)/slides.length*100)+'%';
+    $('prevBtn').disabled=slideIndex===0;
+    $('nextBtn').textContent=slideIndex===slides.length-1?'Recomeçar ↺':'Próximo →';
+    $('speakerText').textContent=notes[slideIndex];
+    if(slideIndex===4){window.requestAnimationFrame(ensureGoogleButton);}
+  }
+  function goTo(index){slideIndex=(index+slides.length)%slides.length;renderSlide();}
+  $('prevBtn').addEventListener('click',()=>{if(slideIndex>0)goTo(slideIndex-1)});
+  $('nextBtn').addEventListener('click',()=>goTo(slideIndex+1));
+  $('notesBtn').addEventListener('click',()=>{notesVisible=!notesVisible;$('speakerNotes').classList.toggle('open',notesVisible);$('notesBtn').setAttribute('aria-pressed',String(notesVisible));});
+  $('fullBtn').addEventListener('click',()=>{if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.().catch(()=>{});});
+  document.addEventListener('keydown',e=>{
+    const el=document.activeElement;
+    if(el&&(el.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(el.tagName)))return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();goTo(slideIndex+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();if(slideIndex>0)goTo(slideIndex-1)}
+    if(e.key.toLowerCase()==='n'&&!e.ctrlKey&&!e.altKey){e.preventDefault();$('notesBtn').click()}
+    if(e.key.toLowerCase()==='f'&&!e.ctrlKey&&!e.altKey){e.preventDefault();$('fullBtn').click()}
+  });
+  const setLoginStatus=text=>{$('loginStatus').textContent=text;};
+  function loadGoogleSdk(){
+    if(location.protocol==='file:'){
+      sdkState='file';$('googleButton').textContent='O login real funciona somente no endereço HTTPS publicado.';
+      setLoginStatus('Abra este HTML pelo link do GitHub Pages para autenticar com Google.');return;
+    }
+    const script=document.createElement('script');
+    script.src='https://accounts.google.com/gsi/client?hl=pt-BR';script.async=true;
+    script.onload=()=>{googleReady=!!window.google?.accounts?.id;sdkState=googleReady?'ready':'error';ensureGoogleButton();};
+    script.onerror=()=>{sdkState='error';ensureGoogleButton();};
+    document.head.appendChild(script);
+    window.setTimeout(()=>{if(sdkState==='loading'){sdkState='error';ensureGoogleButton();}},16000);
+  }
+  function ensureGoogleButton(){
+    if(slideIndex!==4||demoProfile||buttonRendered)return;
+    const container=$('googleButton');
+    if(sdkState==='loading'){
+      container.replaceChildren();const content=document.createElement('span');content.className='login-loading';content.textContent='Preparando autenticação Google…';container.appendChild(content);return;
+    }
+    if(!googleReady){container.textContent=sdkState==='file'?'Use o site HTTPS publicado para fazer login.':'Não foi possível carregar o botão do Google.';
+      setLoginStatus(sdkState==='file'?'Use o link HTTPS hospedado no GitHub Pages.':'Verifique sua conexão, recarregue a página e confira eventuais bloqueios do navegador.');return;}
+    if(!googleInitialized){
+      try{
+        google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleCredentialResponse,auto_select:false,ux_mode:'popup',use_fedcm_for_prompt:true});
+        googleInitialized=true;
+      }catch(e){container.textContent='Não foi possível iniciar o Google.';setLoginStatus('Confira a origem autorizada no Google Cloud.');return;}
+    }
+    try{
+      container.replaceChildren();
+      google.accounts.id.renderButton(container,{type:'standard',theme:'outline',size:'large',shape:'rectangular',text:'signin_with',logo_alignment:'left',width:295,locale:'pt-BR'});
+      buttonRendered=true;
+      setLoginStatus('Pronto. Clique no botão oficial e selecione sua conta Google.');
+    }catch(e){container.textContent='Falha ao renderizar o botão.';setLoginStatus('Recarregue a página e confirme o Client ID e a origem no Google Cloud.');}
+  }
+  function parseCredential(jwt){
+    // ATENÇÃO: somente decodificação para fins didáticos. NÃO verifica a assinatura do JWT.
+    if(typeof jwt!=='string'||jwt.length>40000)throw new Error('Credencial inesperada');
+    const parts=jwt.split('.');if(parts.length!==3)throw new Error('Formato do ID Token inesperado');
+    const base64=parts[1].replace(/-/g,'+').replace(/_/g,'/');
+    const bytes=Uint8Array.from(atob(base64.padEnd(Math.ceil(base64.length/4)*4,'=')),c=>c.charCodeAt(0));
+    const obj=JSON.parse(new TextDecoder().decode(bytes));
+    if(!obj||typeof obj.name!=='string'||typeof obj.email!=='string'||typeof obj.sub!=='string')throw new Error('O token não contém os dados esperados');
+    // Checagem de consistência de demonstração; NÃO substitui validação segura em servidor.
+    if(obj.aud!==GOOGLE_CLIENT_ID)throw new Error('A credencial não corresponde a este aplicativo');
+    if(!['https://accounts.google.com','accounts.google.com'].includes(obj.iss))throw new Error('Emissor inesperado');
+    if(typeof obj.exp==='number'&&obj.exp*1000<Date.now())throw new Error('Credencial expirada');
+    return {name:obj.name.slice(0,140),givenName:typeof obj.given_name==='string'?obj.given_name.slice(0,80):'',email:obj.email.slice(0,250),picture:typeof obj.picture==='string'?obj.picture:''};
+  }
+  function getSafePhoto(url){
+    try{if(!url)return '';const u=new URL(url);return u.protocol==='https:'?u.href:'';}catch{return ''}
+  }
+  function initials(name){return name.trim().split(/\s+/).slice(0,2).map(s=>Array.from(s)[0]||'').join('').toLocaleUpperCase('pt-BR')||'NW'}
+  function firstName(profile){return (profile.givenName||profile.name.split(/\s+/)[0]||'').trim().slice(0,50)||'visitante'}
+  function handleCredentialResponse(response){
+    setLoginStatus('Resposta recebida. Preparando seu ambiente demonstrativo…');
+    try{
+      const p=parseCredential(response?.credential);
+      demoProfile=p;
+      $('dashGreeting').textContent=`Olá, ${firstName(p)}!`;
+      $('profileFullName').textContent=p.name;
+      $('profileEmail').textContent=p.email;
+      const img=$('avatarImage');img.style.display='none';img.removeAttribute('src');
+      $('avatarInitials').textContent=initials(p.name);
+      const picture=getSafePhoto(p.picture);
+      $('profilePhotoState').textContent=picture?'Foto disponibilizada pelo Google':'Sem foto disponibilizada; exibindo iniciais';
+      if(picture){
+        img.onerror=()=>{img.style.display='none';$('avatarInitials').style.display='';$('profilePhotoState').textContent='A foto não carregou; exibindo iniciais';};
+        img.onload=()=>{img.style.display='block';$('avatarInitials').style.display='none';};
+        img.referrerPolicy='no-referrer';img.alt=`Foto do perfil de ${p.name}`;img.src=picture;
+      }else $('avatarInitials').style.display='';
+      $('siteLogin').classList.add('is-hidden');$('siteDashboard').classList.add('is-shown');
+      showNexusTab('home');
+    }catch(err){setLoginStatus('Não foi possível interpretar a resposta do Google. Tente novamente.');}
+  }
+  function showNexusTab(tab){
+    const profile=tab==='profile';
+    $('homePane').style.display=profile?'none':'block';
+    $('profilePane').classList.toggle('active',profile);
+    $('tabHome').classList.toggle('active',!profile);$('tabProfile').classList.toggle('active',profile);
+    $('dashSectionTitle').textContent=profile?'Meu perfil':'Visão geral';
+  }
+  $('tabHome').addEventListener('click',()=>showNexusTab('home'));
+  $('tabProfile').addEventListener('click',()=>showNexusTab('profile'));
+  $('openProfile').addEventListener('click',()=>showNexusTab('profile'));
+  $('backHome').addEventListener('click',()=>showNexusTab('home'));
+  $('logout').addEventListener('click',()=>{
+    if(window.google?.accounts?.id){google.accounts.id.disableAutoSelect();google.accounts.id.cancel?.();}
+    demoProfile=null;
+    $('dashGreeting').textContent='Olá!';$('profileFullName').textContent='';$('profileEmail').textContent='';
+    $('avatarImage').removeAttribute('src');$('avatarImage').style.display='none';$('avatarInitials').style.display='';
+    $('siteDashboard').classList.remove('is-shown');$('siteLogin').classList.remove('is-hidden');
+    showNexusTab('home');
+    setLoginStatus('Você saiu do painel local. Clique no botão Google para entrar novamente ou escolher outra conta.');
+    // Não encerra a sessão global Google. O botão continua disponível para novo login.
+  });
+  renderSlide();
+  loadGoogleSdk();
+})();
+</script>
+</body>
+</html>
