@@ -1,168 +1,67 @@
 'use strict';
-// Client ID público preservado do projeto original. Nunca coloque Client Secret aqui.
 const CLIENT_ID = '94457593553-5bet35ekjces255rl0kaesu289ev8h9h.apps.googleusercontent.com';
 const $ = id => document.getElementById(id);
-let sdkPromise = null;
-let initialized = false;
-let profileVisible = false;
-let photoVersion = 0;
-
-// snippet:load:start
-function loadGoogleSDK() {
-  if (window.google?.accounts?.id) return Promise.resolve();
-  if (sdkPromise) return sdkPromise;
-  sdkPromise = new Promise((resolve, reject) => {
-    const sdk = document.createElement('script');
-    sdk.src = 'https://accounts.google.com/gsi/client?hl=pt-BR';
-    sdk.async = true;
-    const timer = setTimeout(() => finish(false), 15000);
-    let settled = false;
-    function finish(ok) {
-      if (settled) return;
-      settled = true;
-      clearTimeout(timer);
-      sdk.onload = sdk.onerror = null;
-      if (ok) resolve();
-      else { sdk.remove(); reject(new Error('Não foi possível carregar o Google.')); }
-    }
-    sdk.onload = () => finish(Boolean(window.google?.accounts?.id));
-    sdk.onerror = () => finish(false);
-    document.head.append(sdk);
-  }).catch(error => { sdkPromise = null; throw error; });
-  return sdkPromise;
+const courses = [
+ {id:'fotografia',category:'Criatividade',title:'Fotografia com o que você tem',description:'Um novo olhar para a luz, o enquadramento e as histórias do seu dia.',word:'outro olhar.',symbol:'◉',bg:'#e8d8bf',ink:'#80513b',intro:'Uma boa imagem começa com uma escolha: o que você quer que a pessoa veja primeiro?',sections:[['A luz vem antes do filtro','Perto de uma janela, a luz costuma ser mais suave. Observe de onde ela vem e mova o objeto antes de fotografar. Evite apontar a câmera para uma janela muito clara se quiser mostrar os detalhes de um rosto.'],['Escolha o que fica na imagem','Dê alguns passos para mudar o enquadramento. Um fundo simples ajuda o assunto principal a aparecer. Coloque o objeto um pouco fora do centro e compare o resultado.']],exercise:'Fotografe o mesmo objeto perto de uma janela, sob uma lâmpada e na sombra. Compare as cores e os detalhes. Qual luz conta melhor a sua história?'},
+ {id:'curriculo',category:'Carreira',title:'Seu currículo, com mais clareza',description:'Organize suas experiências e conte o que você já sabe fazer.',word:'seu próximo passo.',symbol:'↗',bg:'#d9e2cf',ink:'#345740',intro:'Um currículo funciona melhor quando ajuda alguém a entender rapidamente o que você pode oferecer.',sections:[['Comece pela oportunidade','Leia a descrição da vaga. Escolha experiências que tenham relação com ela. Se você ainda não trabalhou, inclua projetos de escola, cursos e atividades voluntárias.'],['Mostre ações concretas','Em vez de escrever apenas “sou organizado”, descreva uma ação: “organizei o calendário de entregas do projeto da turma”. Use exemplos verdadeiros e não invente resultados.']],exercise:'Escolha uma atividade que você já realizou. Escreva o que você fez e como isso ajudou o grupo. Transforme essas frases em um item do seu currículo.'},
+ {id:'financas',category:'Dia a dia',title:'Organize o dinheiro do mês',description:'Enxergue entradas, despesas e escolhas com uma rotina simples.',word:'mais equilíbrio.',symbol:'◈',bg:'#dce4e7',ink:'#446574',intro:'Antes de mudar seus hábitos, é útil saber para onde o dinheiro está indo. Esta é uma organização inicial, sem recomendações de investimento.',sections:[['Enxergue o mês completo','Anote o que entrou e o que saiu. Separe despesas que se repetem, como moradia e transporte, de compras ocasionais. Inclua gastos pequenos: eles também fazem parte do total.'],['Faça uma revisão possível','Escolha um dia da semana para revisar as anotações. Compare o total disponível com os compromissos que ainda vão vencer. Perceba suas escolhas com antecedência, sem depender da memória.']],exercise:'Em uma folha, crie três colunas: data, descrição e valor. Registre um dia de despesas e marque quais estavam previstas. Não informe dados financeiros neste site.'},
+ {id:'escrita',category:'Criatividade',title:'Tire uma ideia do papel',description:'Exercícios curtos para começar sem esperar a ideia perfeita.',word:'comece uma história.',symbol:'✳',bg:'#ead9d0',ink:'#925c4c',intro:'Uma história pode começar com uma conversa, um objeto ou uma pergunta.',sections:[['Observe antes de explicar','Escolha um lugar comum e anote três detalhes que passariam despercebidos. Um som, uma textura e um objeto ajudam a criar uma cena.'],['Dê uma vontade ao personagem','Imagine alguém que quer algo simples nessa cena: encontrar uma chave ou fazer uma pergunta. Coloque um pequeno obstáculo no caminho e escreva o que acontece.']],exercise:'Escreva por cinco minutos sem apagar. Comece com: “A porta estava aberta, mas ninguém tinha chegado.” Depois, escolha uma frase para desenvolver.'},
+ {id:'entrevista',category:'Carreira',title:'Converse melhor numa entrevista',description:'Prepare exemplos do seu percurso e perguntas com propósito.',word:'sua voz importa.',symbol:'❞',bg:'#e5dfc5',ink:'#6f6c3c',intro:'Preparar uma entrevista é lembrar de exemplos que mostram como você trabalha e aprende.',sections:[['Conte uma situação completa','Escolha uma experiência verdadeira. Explique o contexto, o que precisou fazer, sua ação e o que aconteceu depois. Se algo não deu certo, conte o que aprendeu.'],['A conversa tem duas direções','Pesquise sobre a organização e prepare perguntas sobre a rotina, as responsabilidades e a equipe. Entenda se a oportunidade combina com suas expectativas.']],exercise:'Grave uma resposta de um minuto para “conte uma situação em que precisou aprender algo novo”. Veja se fica claro o que você fez. Não envie gravações para este site.'},
+ {id:'rotina',category:'Dia a dia',title:'Uma rotina que cabe na sua vida',description:'Defina prioridades e transforme uma tarefa em pequenos passos.',word:'um pouco todo dia.',symbol:'◷',bg:'#d6e3de',ink:'#3f7062',intro:'Uma rotina útil considera o tempo e a energia que você realmente tem.',sections:[['Dê um tamanho para a tarefa','“Estudar mais” é amplo. “Ler duas páginas depois do almoço” deixa o primeiro passo visível. Escolha uma ação pequena o suficiente para começar em um dia comum.'],['Deixe espaço para ajustar','Planeje poucas prioridades e reserve tempo para imprevistos. Se um dia não funcionar, reveja o tamanho da tarefa em vez de abandonar o plano inteiro.']],exercise:'Escolha algo que quer fazer esta semana. Escreva o primeiro passo, quando pretende começar e o que pode preparar antes para facilitar.'}
+];
+let profile=null, filter='Todos', activeCourse=null, pendingCourse=null, sdkPromise=null, initialized=false, photoVersion=0, toastTimer;
+let completed=new Set();
+try { const saved=JSON.parse(localStorage.getItem('campus-completed-lessons')||'[]'); if(Array.isArray(saved))completed=new Set(saved.filter(id=>courses.some(c=>c.id===id))); }catch{}
+const normalize=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+function renderCourses(){
+ const query=normalize($('courseSearch').value.trim());
+ const visible=courses.filter(c=>(filter==='Todos'||c.category===filter)&&normalize(c.title+' '+c.description+' '+c.category).includes(query));
+ // Catálogo estático do projeto: dados da conta nunca são inseridos como HTML.
+ $('courseGrid').innerHTML=visible.map(c=>`<article class="course"><div class="course-art" style="--course-bg:${c.bg};--course-ink:${c.ink}" aria-hidden="true"><span class="art-number">CAMPUS / ${c.category.toLocaleUpperCase('pt-BR')}</span><span class="art-symbol">${c.symbol}</span><span class="art-word">${c.word}</span></div><div class="course-body"><div class="course-meta"><span>${c.category}</span><span>Aula introdutória</span></div><h3>${c.title}</h3><p>${c.description}</p><button type="button" data-course="${c.id}">${completed.has(c.id)?'<span class="done-label">Aula concluída ✓</span>':'<span>Conhecer a aula</span>'}<span aria-hidden="true">↗</span></button></div></article>`).join('');
+ $('emptySearch').hidden=visible.length!==0;
+ $('catalogStatus').textContent=`${visible.length} ${visible.length===1?'curso encontrado':'cursos encontrados'}.`;
+ $('completedCount').textContent=String(completed.size);
 }
-// snippet:load:end
-
-// snippet:initialize:start
-function renderGoogleButton() {
-  if (!initialized) {
-    google.accounts.id.initialize({
-      client_id: CLIENT_ID,
-      callback: receiveCredential,
-      auto_select: false,
-      ux_mode: 'popup'
-    });
-    initialized = true;
-  }
-  $('googleButton').replaceChildren();
-  google.accounts.id.renderButton($('googleButton'), {
-    theme: 'outline', size: 'large', width: 240, locale: 'pt-BR'
-  });
+$('courseSearch').addEventListener('input',renderCourses);
+document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{filter=button.dataset.filter;document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));renderCourses();}));
+$('courseGrid').addEventListener('click',event=>{const button=event.target.closest('[data-course]');if(button)openLesson(button.dataset.course);});
+function openLesson(id){
+ activeCourse=courses.find(c=>c.id===id);if(!activeCourse)return;
+ $('lessonCategory').textContent=activeCourse.category+' / AULA INTRODUTÓRIA';$('lessonTitle').textContent=activeCourse.title;$('lessonIntro').textContent=activeCourse.intro;
+ $('lessonContent').innerHTML=activeCourse.sections.map(([title,body])=>`<section><h3>${title}</h3><p>${body}</p></section>`).join('')+`<section class="exercise"><h3>Agora é com você.</h3><p>${activeCourse.exercise}</p></section>`;
+ updateLesson();$('lessonDialog').showModal();$('lessonDialog').scrollTop=0;
 }
-// snippet:initialize:end
-
-// Apenas lê o payload para a apresentação; NÃO verifica a assinatura do token.
-function decodeProfile(token) {
-  if (typeof token !== 'string' || token.length > 40000) throw Error('Token inválido');
-  const parts = token.split('.');
-  if (parts.length !== 3) throw Error('Formato inválido');
-  const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
-  const bytes = Uint8Array.from(atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, '=')), c => c.charCodeAt(0));
-  const data = JSON.parse(new TextDecoder().decode(bytes));
-  if (!data || data.aud !== CLIENT_ID ||
-      !['accounts.google.com', 'https://accounts.google.com'].includes(data.iss) ||
-      typeof data.exp !== 'number' || data.exp * 1000 <= Date.now() ||
-      typeof data.sub !== 'string' || !data.sub) throw Error('Credencial inconsistente');
-  return {
-    name: typeof data.name === 'string' ? data.name.slice(0, 160) : 'Estudante',
-    email: typeof data.email === 'string' ? data.email.slice(0, 260) : 'Não informado',
-    picture: typeof data.picture === 'string' ? data.picture : ''
-  };
+function updateLesson(){const done=completed.has(activeCourse?.id);$('finishLesson').textContent=done?'Aula concluída ✓':'Marcar aula como concluída ✓';$('finishLesson').disabled=done;$('lessonStatus').textContent=done?'Conclusão registrada neste navegador.':profile?'Seu progresso fica salvo neste navegador.':'Para acompanhar suas aulas, entre com sua conta Google.';}
+$('closeLesson').addEventListener('click',()=>$('lessonDialog').close());
+$('finishLesson').addEventListener('click',()=>{if(!activeCourse)return;if(!profile){pendingCourse=activeCourse.id;$('lessonDialog').close();openLogin();return;}completeLesson(activeCourse.id);updateLesson();});
+function completeLesson(id){completed.add(id);let saved=true;try{localStorage.setItem('campus-completed-lessons',JSON.stringify([...completed]));}catch{saved=false;}renderCourses();notify(saved?'Mais um passo dado. Aula concluída!':'Aula concluída nesta visita. O navegador não permitiu salvar o progresso.');}
+function loadGoogleSDK(){
+ if(window.google?.accounts?.id)return Promise.resolve();if(sdkPromise)return sdkPromise;
+ sdkPromise=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://accounts.google.com/gsi/client?hl=pt-BR';script.async=true;let settled=false;const timer=setTimeout(()=>finish(false),15000);function finish(ok){if(settled)return;settled=true;clearTimeout(timer);script.onload=script.onerror=null;if(ok)resolve();else{script.remove();reject(Error('Google indisponível'));}}script.onload=()=>finish(Boolean(window.google?.accounts?.id));script.onerror=()=>finish(false);document.head.append(script);}).catch(error=>{sdkPromise=null;throw error;});return sdkPromise;
 }
-
-// snippet:callback:start
-function receiveCredential(response) {
-  try {
-    const profile = decodeProfile(response.credential);
-    showProfile(profile, 'google');
-  } catch {
-    $('loginStatus').textContent = 'Não foi possível ler a credencial. Tente novamente.';
-  }
+async function prepareGoogle(){
+ $('retryGoogle').hidden=true;$('loginStatus').textContent='Preparando a entrada com Google…';
+ if(location.protocol==='file:'){$('loginStatus').textContent='Abra a versão online do Campus para entrar com sua conta Google.';return;}
+ try{await loadGoogleSDK();if(!initialized){google.accounts.id.initialize({client_id:CLIENT_ID,callback:receiveCredential,auto_select:false,ux_mode:'popup'});initialized=true;}$('googleButton').replaceChildren();google.accounts.id.renderButton($('googleButton'),{theme:'outline',size:'large',width:240,locale:'pt-BR',text:'continue_with'});$('loginStatus').textContent='Escolha sua conta para continuar.';}catch{$('loginStatus').textContent='Não conseguimos carregar o Google. Confira sua conexão e tente novamente.';$('retryGoogle').hidden=false;}
 }
-// snippet:callback:end
-
-function setPhoto(picture, mode) {
-  const image = $('profilePhoto');
-  const version = ++photoVersion;
-  image.hidden = true;
-  image.removeAttribute('src');
-  $('profileInitials').hidden = false;
-  let url = '';
-  if (mode === 'demo') url = 'avatar.svg';
-  else {
-    try {
-      const parsed = new URL(picture);
-      if (parsed.protocol === 'https:' && ['googleusercontent.com', 'ggpht.com'].some(host =>
-          parsed.hostname === host || parsed.hostname.endsWith('.' + host))) url = parsed.href;
-    } catch { /* Sem foto válida: exibir iniciais. */ }
-  }
-  image.onload = () => {
-    if (version !== photoVersion || !profileVisible) return;
-    image.hidden = false;
-    $('profileInitials').hidden = true;
-  };
-  image.onerror = () => {
-    if (version !== photoVersion) return;
-    image.hidden = true;
-    $('profileInitials').hidden = false;
-  };
-  if (url) image.src = url;
+function openLogin(){if(profile){openArea();return;}if(!$('loginDialog').open)$('loginDialog').showModal();prepareGoogle();}
+$('openLogin').addEventListener('click',openLogin);$('closeLogin').addEventListener('click',()=>$('loginDialog').close());$('loginDialog').addEventListener('close',()=>{pendingCourse=null;});$('retryGoogle').addEventListener('click',prepareGoogle);
+// Leitura didática: NÃO verifica a assinatura, não cria sessão e não protege recursos privados.
+// Em produção, o servidor precisa validar a credencial antes de conceder acesso.
+function decodeProfile(token){
+ if(typeof token!=='string'||token.length>40000)throw Error('Credencial inválida');const parts=token.split('.');if(parts.length!==3)throw Error('Formato inválido');const b64=parts[1].replace(/-/g,'+').replace(/_/g,'/');const bytes=Uint8Array.from(atob(b64.padEnd(Math.ceil(b64.length/4)*4,'=')),c=>c.charCodeAt(0));const data=JSON.parse(new TextDecoder().decode(bytes));
+ if(!data||data.aud!==CLIENT_ID||!['accounts.google.com','https://accounts.google.com'].includes(data.iss)||typeof data.sub!=='string'||!data.sub||typeof data.exp!=='number'||data.exp*1000<=Date.now())throw Error('Credencial inconsistente');
+ return{name:typeof data.name==='string'?data.name.slice(0,160):'Estudante',email:typeof data.email==='string'?data.email.slice(0,260):'',picture:typeof data.picture==='string'?data.picture:''};
 }
-
-// snippet:profile:start
-function showProfile(profile, mode) {
-  profileVisible = true;
-  $('profileName').textContent = profile.name;
-  $('profileEmail').textContent = profile.email;
-  $('profileInitials').textContent = profile.name.trim().split(/\s+/)
-    .slice(0, 2).map(part => Array.from(part)[0] || '').join('');
-  $('modeBadge').textContent = mode === 'demo'
-    ? 'Simulação • perfil fictício'
-    : 'Google • perfil recebido, sem validação no servidor';
-  setPhoto(profile.picture, mode);
-  $('loginView').hidden = true;
-  $('dashboard').hidden = false;
-  $('dashboardTitle').focus();
+function receiveCredential(response){
+ try{profile=decodeProfile(response?.credential);const initials=profile.name.trim().split(/\s+/).slice(0,2).map(p=>Array.from(p)[0]||'').join('');$('profileName').textContent=profile.name;$('profileEmail').textContent=profile.email;$('headerName').textContent=profile.name.trim().split(/\s+/)[0]||'Minha conta';$('profileInitials').textContent=$('headerInitials').textContent=initials;showPhoto(profile.picture);$('openLogin').hidden=true;$('accountMenu').hidden=false;const pending=pendingCourse;pendingCourse=null;$('loginDialog').close();if(pending)completeLesson(pending);openArea();}catch{$('loginStatus').textContent='Não foi possível receber seu perfil. Tente entrar novamente.';}
 }
-// snippet:profile:end
-
-// snippet:demo:start
-$('demoLogin').addEventListener('click', () => {
-  showProfile({
-    name: 'Ana Exemplo', email: 'ana@example.com', picture: 'avatar.svg'
-  }, 'demo');
-});
-// snippet:demo:end
-
-$('loadGoogle').addEventListener('click', async () => {
-  if (location.protocol === 'file:') {
-    $('loginStatus').textContent = 'Para o Google, abra por localhost ou HTTPS. A simulação funciona neste arquivo.';
-    return;
-  }
-  $('loadGoogle').disabled = true;
-  $('loginStatus').textContent = 'Carregando o componente oficial…';
-  try {
-    await loadGoogleSDK();
-    renderGoogleButton();
-    $('loadGoogle').hidden = true;
-    $('loginStatus').textContent = 'Selecione sua conta no botão oficial. Erro de origem? Consulte o README para autorizar este endereço.';
-  } catch {
-    $('loginStatus').textContent = 'O Google não carregou. Verifique a conexão e tente novamente, ou use a simulação.';
-  } finally { $('loadGoogle').disabled = false; }
-});
-
-// snippet:logout:start
-$('logout').addEventListener('click', () => {
-  profileVisible = false;
-  photoVersion++;
-  $('profilePhoto').onload = $('profilePhoto').onerror = null;
-  $('profilePhoto').removeAttribute('src');
-  $('profileName').textContent = $('profileEmail').textContent = '';
-  $('profileInitials').textContent = $('modeBadge').textContent = '';
-  $('dashboard').hidden = true;
-  $('loginView').hidden = false;
-  window.google?.accounts?.id?.disableAutoSelect();
-  $('loginStatus').textContent = 'Perfil removido desta página. Sua conta Google continua conectada ao Google.';
-  $('demoLogin').focus();
-});
-// snippet:logout:end
+function showPhoto(picture){
+ const image=$('profilePhoto'),version=++photoVersion;image.hidden=true;image.removeAttribute('src');$('profileInitials').hidden=false;let safe='';try{const url=new URL(picture);if(url.protocol==='https:'&&['googleusercontent.com','ggpht.com'].some(h=>url.hostname===h||url.hostname.endsWith('.'+h)))safe=url.href;}catch{}
+ image.onload=()=>{if(version!==photoVersion||!profile)return;image.hidden=false;$('profileInitials').hidden=true;};image.onerror=()=>{if(version!==photoVersion)return;image.hidden=true;$('profileInitials').hidden=false;};if(safe)image.src=safe;
+}
+function openArea(){if(!profile){openLogin();return;}$('studentArea').hidden=false;$('areaTitle').focus({preventScroll:true});$('studentArea').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}
+$('myArea').addEventListener('click',openArea);$('profileButton').addEventListener('click',openArea);
+$('logout').addEventListener('click',()=>{profile=null;photoVersion++;$('profilePhoto').onload=$('profilePhoto').onerror=null;$('profilePhoto').removeAttribute('src');for(const id of ['profileName','profileEmail','headerName','profileInitials','headerInitials'])$(id).textContent='';$('studentArea').hidden=$('accountMenu').hidden=true;$('openLogin').hidden=false;window.google?.accounts?.id?.disableAutoSelect();if(activeCourse)updateLesson();$('openLogin').focus();notify('Você saiu do Campus.');});
+function notify(message){clearTimeout(toastTimer);$('toast').textContent=message;$('toast').hidden=false;toastTimer=setTimeout(()=>{$('toast').hidden=true;},5000);}
+renderCourses();

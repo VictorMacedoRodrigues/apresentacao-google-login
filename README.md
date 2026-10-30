@@ -1,95 +1,46 @@
-# Autenticação com Google — apresentação + Campus
+# Campus — um site para mostrar o login com Google na prática
 
-Trabalho educacional em português com 13 slides e um portal de estudos funcional para demonstrar a interface de login.
+Portal acadêmico com seis aulas ilustrativas, busca, filtros por assunto, leitura de aulas e área de perfil. Não realiza matrículas ou cobranças.
 
-## Arquivos
+- [Site Campus](https://victormacedorodrigues.github.io/apresentacao-google-login/demo/)
+- [Apresentação](https://victormacedorodrigues.github.io/apresentacao-google-login/)
 
-- `index.html`: apresentação principal.
-- `API_autenticacao_google.html`: mesma apresentação no endereço original, preservado para os links existentes.
-- `style.css` e `script.js`: estilos e navegação da apresentação.
-- `demo/index.html`, `demo/style.css` e `demo/script.js`: site Campus, com estrutura, aparência e lógica separadas.
-- `demo/avatar.svg`: foto ilustrativa do perfil fictício.
+O site usa exclusivamente o botão oficial do Google. Não existe perfil fictício ou entrada offline. Os códigos foram retirados da interface e dos dez slides. A apresentação usa exemplos cotidianos para explicar três motivos diferentes: reduzir etapas do primeiro cadastro, reconhecer uma conta que voltou e delegar a gestão da senha Google.
 
-Não há instalação de dependências nem etapa de compilação.
+## Arquivos e execução
 
-## Executar
+`index.html` e `API_autenticacao_google.html` contêm a mesma apresentação. `style.css` e `script.js` cuidam da aparência e navegação. O site tem seus próprios `demo/index.html`, `demo/style.css` e `demo/script.js`.
 
-Na pasta do projeto, com Python instalado:
+Não exige instalação de dependências. Abra o endereço publicado ou use `python -m http.server 8000` na pasta do projeto. O login requer internet e uma origem autorizada; não funciona em `file://`.
 
-```sh
-python -m http.server 8000
-```
+Nos slides: setas ou botões navegam; Home vai ao início; End vai ao teste; F ativa tela cheia; B pausa. No celular, role o slide verticalmente. A impressão mostra os dez slides.
 
-Abra `http://localhost:8000` para os slides e `http://localhost:8000/demo/` para o site. Também é possível usar uma extensão de servidor local, como Live Server, autorizando a porta correspondente no Google.
+## Testar o Campus
 
-Abrir `index.html` diretamente permite apresentar os slides e testar o perfil fictício. O login Google exige uma origem HTTP em localhost ou HTTPS na publicação; não funciona em `file://`.
+Explore os seis cursos, use uma categoria e busque por uma palavra. Abra uma aula para ler o conteúdo e o exercício. Clique em **Entrar**, **Minha área** ou no botão de conclusão de uma aula para entrar com Google. O perfil recebido aparece na área pessoal. **Sair** remove o perfil da página e não desconecta a conta Google de outros serviços.
 
-Nos slides: setas ou botões avançam e voltam; Home vai ao início; End vai ao teste; F ativa tela cheia; B pausa. No celular, cada slide permite rolagem vertical. O botão do último slide abre o site em outra aba, preservando a apresentação.
+O catálogo e as aulas são públicos. O progresso é salvo apenas neste navegador, sem associação a uma conta remota; não sincroniza entre aparelhos e pode ser visto por outras pessoas que usem o mesmo navegador. Não são salvos nome, e-mail, foto ou token no armazenamento local. Recarregar remove o perfil e exige nova entrada para exibi-lo.
 
-## Modos de teste
+## Configuração do Google
 
-### Simulação — pronta para usar
+O Client ID público original está na constante `CLIENT_ID`, em `demo/script.js`. O proprietário precisa autorizar a origem `https://victormacedorodrigues.github.io`, sem o nome do repositório ou `/demo/`.
 
-1. No último slide, clique em **Abrir site de demonstração**.
-2. Clique em **Experimentar com perfil fictício**.
-3. Confira o nome Ana Exemplo, e-mail `ana@example.com`, avatar ilustrativo e os cards de estudos.
-4. A indicação **Simulação • perfil fictício** permanece visível.
-5. Clique em **Sair do exemplo** para limpar o perfil e voltar à entrada.
+Para outro projeto, configure Google Auth Platform no Google Cloud Console, a tela de consentimento e o público; crie um cliente OAuth para **Aplicativo da Web** e autorize as origens JavaScript utilizadas. Para teste local, inclua `http://localhost:8000` ou a porta escolhida. Adicione usuários de teste quando exigido. Substitua apenas o Client ID público no JavaScript, sem incluir Client Secret.
 
-Esse caminho não chama o Google e não autentica ninguém. Os cursos são conteúdo público ilustrativo, sem recursos protegidos. Não é necessário fornecer senha ou dados pessoais.
+O fluxo usa popup e callback no navegador. Falhas de origem ou cliente precisam ser corrigidas na configuração do Google; não há uma entrada alternativa que simule autenticação.
 
-### Conta Google — exige configuração do proprietário
+## Limite de segurança
 
-O botão **Carregar login com Google** carrega Google Identity Services; o botão oficial aparece em seguida. O Google conduz a escolha da conta e retorna uma credencial ao callback JavaScript. O site exibe os campos do perfil no navegador, com a indicação de ausência de validação no servidor. A senha é tratada pelo Google.
+O botão usa o serviço real do Google, mas este é um projeto estático no GitHub Pages. O código lê os dados e confere campos de consistência; **não valida a assinatura, não cria sessão no servidor e não protege recursos privados**. A apresentação explica essa diferença com a analogia de conferir um crachá.
 
-O Client ID público do trabalho original foi preservado em `demo/script.js`, na constante `CLIENT_ID`. Ele identifica a aplicação; não é um Client Secret. Não é possível confirmar ou alterar as origens permitidas apenas com esse identificador.
+Em produção, envie a credencial ao backend por HTTPS, valide assinatura, emissor, audiência e expiração com uma biblioteca adequada, use `sub` para localizar a conta e crie uma sessão segura. Proteja o endpoint conforme o fluxo, inclusive contra CSRF. Quem salva pedidos, cursos e progresso em outros aparelhos é o próprio serviço, não o login Google.
 
-Para usar seu próprio projeto:
+## Publicação
 
-1. Acesse [Google Cloud Console](https://console.cloud.google.com/) e selecione ou crie um projeto.
-2. Em **Google Auth Platform**, configure Branding, Audience e os contatos exigidos para a tela de consentimento. Se a aplicação estiver em teste e sua configuração exigir usuários de teste, adicione as contas que participarão.
-3. Em **Clients** (ou **APIs e serviços → Credenciais**, conforme a interface), crie um Client ID OAuth do tipo **Aplicativo da Web**.
-4. Adicione às **Origens JavaScript autorizadas** os endereços usados, como `http://localhost:8000` e `https://victormacedorodrigues.github.io`. A origem contém protocolo, domínio e porta quando aplicável; não inclui `/demo/` nem o nome do repositório.
-5. Substitua somente `CLIENT_ID` em `demo/script.js` pelo identificador terminado em `.apps.googleusercontent.com`.
-6. Aguarde a propagação da configuração e teste pelo endereço autorizado.
-
-Este exemplo usa popup e callback no navegador, sem `login_uri`; não configura um fluxo de redirecionamento. Não coloque Client Secret, senha, chave privada ou tokens no repositório.
-
-O Google pode exigir consentimento ou aplicar restrições conforme a conta, a configuração e as políticas do navegador. Se o botão não carregar, confira a rede e bloqueadores. Se houver erro de origem ou Client ID, confira a configuração acima. A simulação permanece disponível.
-
-## O que o código faz
-
-Os seis cards do site contêm trechos reais de `demo/script.js`: carregar a biblioteca, inicializar o botão, receber a credencial, exibir o perfil, simular e sair. Dois slides também mostram as funções principais.
-
-O Google fornece a biblioteca, a escolha da conta e o ID Token. O site carrega essa biblioteca, recebe o retorno e altera sua própria interface. O exemplo usa `textContent` para exibir dados e limita as fotos remotas a domínios de imagem do Google, com iniciais como alternativa. Nome, e-mail e foto ficam na interface enquanto a página estiver aberta; o site não salva tokens em armazenamento local nem os registra no console. Sair remove o perfil da página e não encerra a conta Google nos outros serviços.
-
-`decodeProfile` apenas decodifica o JWT e faz verificações de consistência de audiência, emissor, expiração e identificador. **Isso não valida a assinatura e não constitui uma autenticação de produção.** O exemplo não implementa backend, sessão segura ou controle de acesso.
-
-Em produção, envie a credencial ao servidor por HTTPS, valide assinatura, `iss`, `aud` e `exp` com uma biblioteca adequada, associe `sub` ao usuário local e crie uma sessão segura. Proteja o endpoint contra CSRF conforme o fluxo adotado. O servidor deve verificar permissões a cada recurso protegido. Entrar com Google não concede acesso automático ao Gmail ou ao Drive.
-
-## Publicar no GitHub Pages
-
-1. Envie todos os arquivos, incluindo as pastas e os arquivos CSS e JS, para o repositório.
-2. Em **Settings → Pages**, selecione **Deploy from a branch**, branch `main` e pasta `/ (root)`.
-3. Salve e aguarde o endereço confirmado pelo GitHub. Para este repositório, o endereço esperado é `https://victormacedorodrigues.github.io/apresentacao-google-login/`.
-4. Autorize a origem `https://victormacedorodrigues.github.io` no Client ID que estiver em uso.
-5. Abra a apresentação publicada; o botão do teste leva a `demo/index.html` no mesmo projeto.
-
-O endereço acima é o esperado para essa configuração, não uma confirmação de publicação. O GitHub Pages serve arquivos estáticos; ele não substitui um backend para validação de identidade e sessão.
-
-## Checklist para apresentar
-
-- Navegar pelos 13 slides e abrir o site pelo último.
-- Entrar pela simulação, conferir o perfil e sair; repetir o ciclo.
-- Abrir os seis cards e comparar os trechos com `demo/script.js`.
-- Em um endereço autorizado, carregar o botão oficial e escolher uma conta.
-- Conferir a indicação de modo Google e a ressalva sobre validação.
-- Recarregar a página e verificar que o perfil desaparece.
-- Conferir também em uma janela estreita, como a de um celular.
+GitHub Pages publica a branch `main`, pasta `/ (root)`. Envie os arquivos mantendo a pasta `demo` e aguarde a publicação.
 
 ## Referências oficiais
 
-- [Exibir o botão de login](https://developers.google.com/identity/gsi/web/guides/display-button)
-- [Configurar o projeto e o Client ID](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid)
-- [Validar o ID Token no servidor](https://developers.google.com/identity/gsi/web/guides/verify-google-id-token)
-- [Publicar pelo GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
+- [Botão do Google](https://developers.google.com/identity/gsi/web/guides/display-button)
+- [Configurar Client ID](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid)
+- [Verificar credencial no servidor](https://developers.google.com/identity/gsi/web/guides/verify-google-id-token)

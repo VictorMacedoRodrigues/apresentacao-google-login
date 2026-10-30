@@ -4,7 +4,7 @@
 const $=id=>document.getElementById(id),slides=[...document.querySelectorAll('.slide')];
 const demoIndex=slides.length-1;
 let current=0;
-function fit(){const r=document.querySelector('.viewport').getBoundingClientRect();document.documentElement.style.setProperty('--scale',Math.min(r.width/1280,r.height/650));}
+function fit(){const r=document.querySelector('.viewport').getBoundingClientRect();document.documentElement.style.setProperty('--scale',Math.min(r.width/1280,r.height/720));}
 window.addEventListener('resize',fit);fit();
 function render(){
   slides.forEach((s,i)=>{const active=i===current;s.classList.toggle('active',active);s.inert=!active;s.setAttribute('aria-hidden',String(!active));});
