@@ -5,7 +5,7 @@ Portal acadêmico com seis aulas ilustrativas, busca, filtros por assunto, leitu
 - [Site Campus](https://victormacedorodrigues.github.io/apresentacao-google-login/demo/)
 - [Apresentação](https://victormacedorodrigues.github.io/apresentacao-google-login/)
 
-O site usa exclusivamente o botão oficial do Google. Não existe perfil fictício ou entrada offline. Os códigos foram retirados da interface e dos dez slides. A apresentação usa exemplos cotidianos para explicar três motivos diferentes: reduzir etapas do primeiro cadastro, reconhecer uma conta que voltou e delegar a gestão da senha Google.
+O site usa exclusivamente o botão oficial do Google. Não existe perfil fictício ou entrada offline. Os códigos foram retirados da interface e dos vinte slides. A apresentação usa exemplos cotidianos para explicar três motivos diferentes: reduzir etapas do primeiro cadastro, reconhecer uma conta que voltou e delegar a gestão da senha Google.
 
 ## Arquivos e execução
 
@@ -13,7 +13,7 @@ O site usa exclusivamente o botão oficial do Google. Não existe perfil fictíc
 
 Não exige instalação de dependências. Abra o endereço publicado ou use `python -m http.server 8000` na pasta do projeto. O login requer internet e uma origem autorizada; não funciona em `file://`.
 
-Nos slides: setas ou botões navegam; Home vai ao início; End vai ao teste; F ativa tela cheia; B pausa. No celular, role o slide verticalmente. A impressão mostra os dez slides.
+Nos slides: setas ou botões navegam; Home vai ao início; End vai ao teste; F ativa tela cheia; B pausa. No celular, role o slide verticalmente. A impressão mostra os vinte slides.
 
 ## Testar o Campus
 
@@ -44,3 +44,9 @@ GitHub Pages publica a branch `main`, pasta `/ (root)`. Envie os arquivos manten
 - [Botão do Google](https://developers.google.com/identity/gsi/web/guides/display-button)
 - [Configurar Client ID](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid)
 - [Verificar credencial no servidor](https://developers.google.com/identity/gsi/web/guides/verify-google-id-token)
+
+## Conteúdo técnico da apresentação
+
+Além dos exemplos cotidianos, os slides explicam HTML/CSS/JavaScript, Google Identity Services e SDK, Google Cloud, Client ID, origem autorizada, callback, autenticação e autorização, OAuth 2.0, OpenID Connect, ID Token e Access Token, JSON, JWT, JWS, header, payload, assinatura, claims sub/iss/aud/exp, validação no servidor, sessão e permissões. Não há blocos de código. As fontes oficiais estão no penúltimo slide.
+
+O último slide tem o botão **ABRIR SITE E TESTAR LOGIN**, que abre o Campus online em outra aba. O cabeçalho também oferece **Abrir Campus** em qualquer slide. O link direto para o slide de teste é https://victormacedorodrigues.github.io/apresentacao-google-login/#demo.

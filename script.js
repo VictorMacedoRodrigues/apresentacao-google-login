@@ -12,7 +12,7 @@ function render(){
   $('slideTitle').textContent=slides[current].dataset.title;
   $('prevBtn').disabled=current===0;$('nextBtn').textContent=current===demoIndex?'Voltar ao início ↺':'Próximo →';
   $('progressValue').style.width=(current+1)/slides.length*100+'%';
-  history.replaceState(null,'','#'+(current+1));
+  history.replaceState(null,'',current===demoIndex?'#demo':'#'+(current+1));
 
 }
 function go(index){current=(index+slides.length)%slides.length;render();}
@@ -29,7 +29,8 @@ document.addEventListener('keydown',e=>{
   else if(key===' '&&!['BUTTON','A'].includes(el?.tagName)){e.preventDefault();go(current+1);}
   else if(key==='f'){$('fullBtn').click();}
 });
-const start=Number(location.hash.slice(1));if(Number.isInteger(start)&&start>=1&&start<=slides.length)current=start-1;
-window.addEventListener('hashchange',()=>{const n=Number(location.hash.slice(1));if(Number.isInteger(n)&&n>=1&&n<=slides.length)go(n-1);});
+function indexFromHash(){if(location.hash==='#demo')return demoIndex;const n=Number(location.hash.slice(1));return Number.isInteger(n)&&n>=1&&n<=slides.length?n-1:0;}
+current=indexFromHash();
+window.addEventListener('hashchange',()=>go(indexFromHash()));
 render();
 })();
