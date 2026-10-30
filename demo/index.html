@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="theme-color" content="#f5f7fb"><title>Campus · Demonstração do login com Google</title><link rel="stylesheet" href="style.css"><script src="script.js" defer></script></head>
+<body><header class="site-header"><a class="brand" href="index.html" aria-label="Campus início"><span class="brand-icon" aria-hidden="true">C</span> campus<span class="brand-dot">.</span></a><nav aria-label="Links do projeto"><a href="../index.html#13">Voltar aos slides ↗</a><a href="#codigo">Código explicado</a></nav></header>
+<main><section class="hero" id="loginView" aria-labelledby="loginTitle"><div class="intro"><span class="eyebrow">SEU PRÓXIMO PASSO COMEÇA AQUI</span><h1 id="loginTitle">Um lugar para<br>aprender <span>mais.</span></h1><p>Organize seus estudos, encontre seus cursos e continue de onde parou. Entre para conhecer o portal da nossa apresentação.</p><div class="feature"><span aria-hidden="true">✓</span><div><strong>Uma conta que você já conhece</strong><p>O Google identifica sua conta. O Campus cuida da experiência.</p></div></div><div class="feature"><span aria-hidden="true">✓</span><div><strong>Menos uma senha para lembrar</strong><p>O site não recebe a senha da sua conta Google.</p></div></div><a class="text-link" href="#por-que">Entenda por que usamos essa API ↓</a></div>
+<div class="login-card"><span class="pill">LABORATÓRIO DE LOGIN</span><h2>Bem-vindo ao Campus</h2><p>Escolha como explorar o exemplo.</p><button id="demoLogin" class="primary" type="button">Experimentar com perfil fictício →</button><p class="hint">Simulação local · sem conta ou senha · sem autenticação</p><div class="separator"><span>OU USE UMA CONTA GOOGLE</span></div><button id="loadGoogle" class="secondary" type="button">Carregar login com Google</button><div id="googleButton" aria-label="Botão oficial de login com Google"></div><p id="loginStatus" class="status" role="status" aria-live="polite">O modo Google exige internet e um endereço autorizado.</p><div class="notice">Exemplo didático: o perfil retornado pelo Google é exibido no navegador, sem validação de assinatura ou sessão no servidor.</div></div></section>
+<section id="dashboard" class="dashboard" aria-labelledby="dashboardTitle" hidden><div class="dashboard-top"><div><span class="eyebrow">SUA ÁREA DE ESTUDOS</span><h1 id="dashboardTitle" tabindex="-1">Bom te ver por aqui.</h1><p>Explore o portal e acompanhe como o perfil aparece na interface.</p></div><button class="secondary" id="logout" type="button">Sair do exemplo</button></div><div class="profile-card"><div class="avatar"><span id="profileInitials"></span><img id="profilePhoto" alt="Foto do perfil" referrerpolicy="no-referrer" hidden></div><div><span class="pill" id="modeBadge"></span><h2 id="profileName"></h2><p id="profileEmail"></p></div></div><div class="section-heading"><h2>Seu próximo aprendizado</h2><span>Conteúdo ilustrativo e público</span></div><div class="course-grid"><article><span class="course-icon">01</span><span class="eyebrow">FUNDAMENTOS</span><h3>Como as APIs conectam sistemas</h3><p>Entenda pedidos, respostas e integrações com serviços externos.</p><a href="../index.html#2">Revisar nos slides →</a></article><article><span class="course-icon">02</span><span class="eyebrow">IDENTIDADE DIGITAL</span><h3>Do botão ao ID Token</h3><p>Conheça o caminho entre a escolha da conta e a credencial.</p><a href="../index.html#6">Ver o fluxo →</a></article><article><span class="course-icon">03</span><span class="eyebrow">NA PRÁTICA</span><h3>Descubra o código por trás</h3><p>Veja quais trechos usam o Google e quais controlam a interface.</p><a href="#codigo">Explorar o código →</a></article></div><p class="notice">Esta área é apenas uma mudança visual. Seus conteúdos são públicos. Recarregar a página remove o perfil; nenhum token é salvo pelo site.</p></section>
+<section id="por-que" class="info-section"><span class="eyebrow">POR QUE ESSA INTEGRAÇÃO?</span><h2>O Google cuida da conta.<br>O site cuida da experiência.</h2><div class="reason-grid"><article><span>01</span><h3>Entrada mais simples</h3><p>Usar uma conta existente reduz o cadastro e evita criar outra senha para este site.</p></article><article><span>02</span><h3>Identidade consistente</h3><p>Após validar o token no servidor, o site usa o campo sub para reconhecer a mesma conta.</p></article><article><span>03</span><h3>Integração pronta</h3><p>A biblioteca oficial oferece o botão e a escolha de conta; a aplicação recebe a credencial e monta a interface.</p></article></div><p class="notice">Login não é permissão para ler Gmail ou Drive. O site continua responsável por validar credenciais, criar sessões e definir o acesso aos seus recursos.</p></section>
+<section id="codigo" class="info-section"><span class="eyebrow">DO CLIQUE AO CÓDIGO</span><h2>Como esse site funciona</h2><p class="section-intro">Os cards mostram trechos exatos de <a href="script.js">demo/script.js</a>. Abra cada um para acompanhar a implementação.</p><div class="code-grid"><article class="code-card"><span class="term">01 / GOOGLE + SITE</span><h3>Carregar o serviço</h3><p>O site carrega a biblioteca oficial. O endereço pertence ao Google; a função de carregamento e o tratamento de falhas pertencem ao site.</p><details><summary>Ver trecho de demo/script.js</summary><pre><code>function loadGoogleSDK() {
+  if (window.google?.accounts?.id) return Promise.resolve();
+  if (sdkPromise) return sdkPromise;
+  sdkPromise = new Promise((resolve, reject) =&gt; {
+    const sdk = document.createElement('script');
+    sdk.src = 'https://accounts.google.com/gsi/client?hl=pt-BR';
+    sdk.async = true;
+    const timer = setTimeout(() =&gt; finish(false), 15000);
+    let settled = false;
+    function finish(ok) {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      sdk.onload = sdk.onerror = null;
+      if (ok) resolve();
+      else { sdk.remove(); reject(new Error('Não foi possível carregar o Google.')); }
+    }
+    sdk.onload = () =&gt; finish(Boolean(window.google?.accounts?.id));
+    sdk.onerror = () =&gt; finish(false);
+    document.head.append(sdk);
+  }).catch(error =&gt; { sdkPromise = null; throw error; });
+  return sdkPromise;
+}</code></pre></details></article>
+<article class="code-card"><span class="term">02 / GOOGLE</span><h3>Preparar o botão oficial</h3><p>initialize associa o Client ID ao site. renderButton desenha o botão oficial; o Google conduz a escolha da conta.</p><details><summary>Ver trecho de demo/script.js</summary><pre><code>function renderGoogleButton() {
+  if (!initialized) {
+    google.accounts.id.initialize({
+      client_id: CLIENT_ID,
+      callback: receiveCredential,
+      auto_select: false,
+      ux_mode: 'popup'
+    });
+    initialized = true;
+  }
+  $('googleButton').replaceChildren();
+  google.accounts.id.renderButton($('googleButton'), {
+    theme: 'outline', size: 'large', width: 240, locale: 'pt-BR'
+  });
+}</code></pre></details></article>
+<article class="code-card"><span class="term">03 / RESPOSTA</span><h3>Receber a credencial</h3><p>O Google chama o callback com um ID Token. decodeProfile apenas lê e confere campos; não valida a assinatura nem cria uma sessão.</p><details><summary>Ver trecho de demo/script.js</summary><pre><code>function receiveCredential(response) {
+  try {
+    const profile = decodeProfile(response.credential);
+    showProfile(profile, 'google');
+  } catch {
+    $('loginStatus').textContent = 'Não foi possível ler a credencial. Tente novamente.';
+  }
+}</code></pre></details></article>
+<article class="code-card"><span class="term">04 / SITE</span><h3>Mostrar os dados na tela</h3><p>O site usa textContent para mostrar nome e e-mail, escolhe a foto e muda a interface. Nenhum recurso privado é protegido por esta tela.</p><details><summary>Ver trecho de demo/script.js</summary><pre><code>function showProfile(profile, mode) {
+  profileVisible = true;
+  $('profileName').textContent = profile.name;
+  $('profileEmail').textContent = profile.email;
+  $('profileInitials').textContent = profile.name.trim().split(/\s+/)
+    .slice(0, 2).map(part =&gt; Array.from(part)[0] || '').join('');
+  $('modeBadge').textContent = mode === 'demo'
+    ? 'Simulação • perfil fictício'
+    : 'Google • perfil recebido, sem validação no servidor';
+  setPhoto(profile.picture, mode);
+  $('loginView').hidden = true;
+  $('dashboard').hidden = false;
+  $('dashboardTitle').focus();
+}</code></pre></details></article>
+<article class="code-card"><span class="term">05 / SIMULAÇÃO</span><h3>Testar sem uma conta</h3><p>Esta ação usa um perfil fictício local. Ela não chama a API do Google nem autentica a pessoa.</p><details><summary>Ver trecho de demo/script.js</summary><pre><code>$('demoLogin').addEventListener('click', () =&gt; {
+  showProfile({
+    name: 'Ana Exemplo', email: 'ana@example.com', picture: 'avatar.svg'
+  }, 'demo');
+});</code></pre></details></article>
+<article class="code-card"><span class="term">06 / SITE</span><h3>Sair do exemplo</h3><p>O site limpa os dados da interface e evita a seleção automática. Isso não desconecta a conta Google de outros serviços.</p><details><summary>Ver trecho de demo/script.js</summary><pre><code>$('logout').addEventListener('click', () =&gt; {
+  profileVisible = false;
+  photoVersion++;
+  $('profilePhoto').onload = $('profilePhoto').onerror = null;
+  $('profilePhoto').removeAttribute('src');
+  $('profileName').textContent = $('profileEmail').textContent = '';
+  $('profileInitials').textContent = $('modeBadge').textContent = '';
+  $('dashboard').hidden = true;
+  $('loginView').hidden = false;
+  window.google?.accounts?.id?.disableAutoSelect();
+  $('loginStatus').textContent = 'Perfil removido desta página. Sua conta Google continua conectada ao Google.';
+  $('demoLogin').focus();
+});</code></pre></details></article></div><aside class="production"><h3>O que falta para uma autenticação de produção?</h3><p>Enviar a credencial ao servidor por HTTPS; validar assinatura, emissor (iss), audiência (aud) e expiração (exp); associar o sub à conta local e criar uma sessão segura. Ler o payload no navegador não comprova sua autenticidade.</p><a href="https://developers.google.com/identity/gsi/web/guides/verify-google-id-token" target="_blank" rel="noopener">Consultar a documentação oficial do Google ↗</a></aside></section></main>
+<footer>Campus · Projeto educacional sobre Google Identity Services <a href="../README.md">Configuração e instruções ↗</a></footer></body></html>
